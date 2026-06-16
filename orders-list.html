@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+        <link rel="icon" type="image/png" href="images/favicon.png">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>جميع الطلبات | المتجر الكشفي</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background-color: #f5f0e6;
+            font-family: 'Inter', sans-serif;
+            color: #1f1c17;
+        }
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        .page-title {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            color: #1e3a2f;
+            text-align: center;
+        }
+        .stats-card {
+            background: white;
+            border-radius: 28px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .stats-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #e26d3a;
+        }
+        .stats-row {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+        .stats-item {
+            text-align: center;
+        }
+        .stats-item span {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e3a2f;
+        }
+        .search-box {
+            margin-bottom: 25px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .search-box input {
+            flex: 1;
+            padding: 12px 20px;
+            border: 2px solid #e6dfd3;
+            border-radius: 40px;
+            font-size: 1rem;
+            outline: none;
+        }
+        .search-box input:focus {
+            border-color: #e26d3a;
+        }
+        .search-box button {
+            background: #e26d3a;
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .orders-table {
+            background: white;
+            border-radius: 28px;
+            overflow-x: auto;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: right;
+        }
+        th {
+            background: #1e3a2f;
+            color: white;
+            padding: 15px;
+            font-weight: 600;
+        }
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e6dfd3;
+        }
+        tr:hover {
+            background: #f9f6ef;
+        }
+        .order-items {
+            font-size: 0.8rem;
+            color: #5b5549;
+            max-width: 250px;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .status-completed {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        .status-shipped {
+            background: #cce5ff;
+            color: #004085;
+        }
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.75rem;
+        }
+        .delete-btn:hover {
+            background: #c82333;
+        }
+        .view-btn {
+            background: #17a2b8;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            margin-left: 5px;
+        }
+        .view-btn:hover {
+            background: #138496;
+        }
+        .back-btn {
+            display: inline-block;
+            background: #1e3a2f;
+            color: white;
+            text-decoration: none;
+            padding: 10px 24px;
+            border-radius: 40px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        .back-btn:hover {
+            background: #2a5a44;
+        }
+        .empty-message {
+            text-align: center;
+            padding: 50px;
+            color: #7e7669;
+        }
+        .footer {
+            background-color: #2a2822;
+            color: #ddd8ce;
+            padding: 30px 0;
+            margin-top: 40px;
+            text-align: center;
+        }
+        @media (max-width: 768px) {
+            th, td {
+                padding: 8px;
+                font-size: 0.8rem;
+            }
+        }/* ==================== RESPONSIVE CODE - لجميع الأجهزة ==================== */
+/* يمكنك إضافة هذا الكود في نهاية الـ style في كل صفحة */
+
+/* Extra Small Devices (موبايل صغير جداً - iPhone SE, Galaxy Fold) */
+@media (max-width: 480px) {
+    /* الهيدر */
+    .site-header {
+        padding: 0 15px;
+    }
+    .header-inner {
+        height: 55px;
+    }
+    .logo {
+        font-size: 1.1rem;
+    }
+    .logo::before {
+        font-size: 0.9rem;
+    }
+    .nav-menu a {
+        font-size: 0.8rem;
+        padding: 12px 15px;
+    }
+    .header-icons {
+        gap: 12px;
+        font-size: 1rem;
+    }
+    .cart-badge {
+        width: 16px;
+        height: 16px;
+        font-size: 9px;
+        top: -8px;
+        right: -8px;
+    }
+    
+    /* الحاوية الرئيسية */
+    .container {
+        padding: 0 15px;
+    }
+    
+    /* العناوين */
+    .page-title {
+        font-size: 1.6rem;
+    }
+    .hero-headline {
+        font-size: 1.8rem;
+    }
+    .hero-desc {
+        font-size: 0.85rem;
+    }
+    
+    /* الأزرار */
+    .btn-primary, .btn-add-cart, .btn-buy-now {
+        padding: 10px 20px;
+        font-size: 0.85rem;
+    }
+    
+    /* شريط الفلترة */
+    .filter-bar {
+        flex-direction: column;
+        gap: 15px;
+    }
+    .filter-group {
+        justify-content: center;
+        gap: 10px;
+    }
+    .filter-dropdown {
+        padding: 6px 12px;
+        font-size: 0.75rem;
+    }
+    .sort-select {
+        padding: 8px 15px;
+        font-size: 0.8rem;
+    }
+    
+    /* المنتجات */
+    .product-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    .product-card {
+        max-width: 100%;
+    }
+    .product-title {
+        font-size: 0.9rem;
+    }
+    .product-price {
+        font-size: 1rem;
+    }
+    
+    /* الفوتر */
+    .footer-grid {
+        flex-direction: column;
+        gap: 30px;
+        text-align: center;
+    }
+    .footer-col h4:after {
+        right: 50%;
+        transform: translateX(50%);
+    }
+    .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+    }
+    .social-icons-footer {
+        justify-content: center;
+    }
+    .payment-methods {
+        justify-content: center;
+    }
+    
+    /* البانر */
+    .hero-banner {
+        padding: 20px;
+        flex-direction: column;
+        text-align: center;
+    }
+    .banner-text h2 {
+        font-size: 1.3rem;
+    }
+    .banner-img {
+        max-width: 150px;
+        margin-top: 15px;
+    }
+    
+    /* الصفحات الداخلية */
+    .product-detail {
+        padding: 20px;
+    }
+    .product-title-detail {
+        font-size: 1.3rem;
+    }
+    .product-price-detail {
+        font-size: 1.5rem;
+    }
+    .quantity-selector {
+        justify-content: center;
+    }
+    .action-buttons {
+        flex-direction: column;
+    }
+    
+    /* السلة */
+    .cart-item {
+        flex-direction: column;
+        text-align: center;
+    }
+    .cart-item-img {
+        margin: 0 auto;
+    }
+    .cart-item-total {
+        text-align: center;
+        margin-top: 10px;
+    }
+    .cart-summary {
+        position: static;
+        margin-top: 20px;
+    }
+    
+    /* التسجيل والدخول */
+    .registration-card, .login-container, .signup-container {
+        padding: 25px 20px;
+    }
+    .registration-card h2, .login-container h1, .signup-container h1 {
+        font-size: 1.5rem;
+    }
+    .reg-input {
+        padding: 10px 14px;
+    }
+}
+
+/* Small Devices (موبايل متوسط وكبير - 481px to 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+    .site-header {
+        padding: 0 20px;
+    }
+    .header-inner {
+        height: 60px;
+    }
+    .logo {
+        font-size: 1.3rem;
+    }
+    .nav-menu a {
+        font-size: 0.85rem;
+        padding: 12px 20px;
+    }
+    .container {
+        padding: 0 20px;
+    }
+    .page-title {
+        font-size: 2rem;
+    }
+    .hero-headline {
+        font-size: 2rem;
+    }
+    .product-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+    .filter-bar {
+        flex-direction: column;
+        gap: 15px;
+    }
+    .filter-group {
+        justify-content: center;
+    }
+    .footer-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 30px;
+    }
+    .hero-banner {
+        padding: 25px;
+    }
+    .banner-text h2 {
+        font-size: 1.5rem;
+    }
+    .product-detail {
+        flex-direction: column;
+        padding: 25px;
+    }
+    .checkout-grid {
+        flex-direction: column;
+    }
+    .cart-summary {
+        position: static;
+        margin-top: 20px;
+    }
+}
+
+/* Medium Devices (تابلت - 769px to 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .container {
+        max-width: 960px;
+        padding: 0 25px;
+    }
+    .product-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 25px;
+    }
+    .hero-headline {
+        font-size: 2.5rem;
+    }
+    .footer-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 40px;
+    }
+    .product-detail {
+        padding: 30px;
+    }
+}
+
+/* Large Devices (لاب توب صغير - 1025px to 1280px) */
+@media (min-width: 1025px) and (max-width: 1280px) {
+    .container {
+        max-width: 1100px;
+    }
+    .product-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+    }
+}
+
+/* Extra Large Devices (شاشات كبيرة 4K - 1921px and above) */
+@media (min-width: 1921px) {
+    .container {
+        max-width: 1600px;
+    }
+    body {
+        font-size: 1.1rem;
+    }
+    .page-title {
+        font-size: 3.5rem;
+    }
+    .hero-headline {
+        font-size: 4rem;
+    }
+    .product-grid {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 35px;
+    }
+    .btn-primary, .btn-add-cart, .btn-buy-now {
+        padding: 16px 40px;
+        font-size: 1.1rem;
+    }
+}
+
+/* ==================== ميزات إضافية لتحسين التجربة ==================== */
+
+/* تحسين اللمس على الموبايل */
+@media (max-width: 768px) {
+    button, 
+    .btn-primary, 
+    .btn-add-cart, 
+    .btn-buy-now,
+    .filter-dropdown,
+    .detail-btn,
+    .nav-menu a,
+    .header-icons a,
+    .product-card,
+    .quantity-btn,
+    .page-number,
+    .scouting-btn {
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+    }
+    
+    /* تكبير مساحة النقر */
+    .nav-menu a {
+        padding: 14px 20px;
+    }
+    .filter-dropdown {
+        padding: 8px 16px;
+    }
+    .quantity-btn {
+        width: 44px;
+        height: 44px;
+    }
+    
+    /* منع التكبير التلقائي على iOS */
+    input, select, textarea {
+        font-size: 16px;
+    }
+}
+
+/* تحسين التمرير */
+html {
+    scroll-behavior: smooth;
+}
+
+/* تحسين عرض الصور */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* تحسين الجداول على الموبايل */
+@media (max-width: 768px) {
+    table, thead, tbody, th, td, tr {
+        display: block;
+    }
+    thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+    tr {
+        margin-bottom: 15px;
+        border: 1px solid #e6dfd3;
+        border-radius: 16px;
+        padding: 10px;
+    }
+    td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 12px;
+        border-bottom: 1px solid #e6dfd3;
+    }
+    td:before {
+        content: attr(data-label);
+        font-weight: bold;
+        margin-left: 10px;
+    }
+}
+
+/* تحسين عرض الفيديو على الموبايل */
+.video-container {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+}
+.video-container video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <a href="index.html" class="back-btn"><i class="fas fa-arrow-right"></i> العودة للرئيسية</a>
+    <h1 class="page-title"><i class="fas fa-shopping-cart"></i> جميع الطلبات</h1>
+    
+    <div class="stats-card">
+        <div class="stats-number" id="ordersCount">0</div>
+        <p>إجمالي عدد الطلبات</p>
+        <div class="stats-row">
+            <div class="stats-item">
+                <span id="totalAmount">0</span>
+                <p>إجمالي المبيعات (ج.م)</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="بحث باسم العميل أو البريد الإلكتروني...">
+        <button onclick="searchOrders()"><i class="fas fa-search"></i> بحث</button>
+        <button onclick="resetSearch()" style="background: #6c757d;"><i class="fas fa-sync-alt"></i> عرض الكل</button>
+    </div>
+    
+    <div class="orders-table">
+        <table id="ordersTable">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>اسم العميل</th>
+                    <th>رقم الهاتف</th>
+                    <th>البريد الإلكتروني</th>
+                    <th>المنتجات المطلوبة</th>
+                    <th>سعر الطلب</th>
+                    <th>تاريخ الطلب</th>
+                    <th>الحالة</th>
+                    <th>إجراءات</th>
+                </tr>
+            </thead>
+            <tbody id="ordersTableBody">
+                <tr><td colspan="9" class="empty-message">جاري تحميل البيانات...</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<footer class="footer">
+    <div class="container">
+        <p>© 2026 المتجر الكشفي — جميع الحقوق محفوظة | لوحة تحكم الطلبات</p>
+    </div>
+</footer>
+
+<script>
+    // دالة للحصول على جميع الطلبات
+    function getOrders() {
+        const orders = localStorage.getItem('scout_orders');
+        return orders ? JSON.parse(orders) : [];
+    }
+
+    // دالة لحفظ الطلبات
+    function saveOrders(orders) {
+        localStorage.setItem('scout_orders', JSON.stringify(orders));
+    }
+
+    // دالة لحذف طلب
+    function deleteOrder(orderId) {
+        if (confirm('هل أنت متأكد من حذف هذا الطلب؟')) {
+            let orders = getOrders();
+            orders = orders.filter(order => order.id !== orderId);
+            saveOrders(orders);
+            displayOrders();
+        }
+    }
+
+    // دالة لعرض تفاصيل الطلب
+    function viewOrderDetails(order) {
+        let itemsList = '';
+        if (order.items && order.items.length > 0) {
+            order.items.forEach(item => {
+                itemsList += `${item.name} (×${item.quantity}) - ${item.price * item.quantity} ج.م\n`;
+            });
+        }
+        alert(`📋 تفاصيل الطلب:\n\nالعميل: ${order.customer?.fullName || order.name}\nالهاتف: ${order.customer?.phone || order.phone}\nالعنوان: ${order.customer?.address || 'غير محدد'}\n\nالمنتجات:\n${itemsList}\nالمجموع الكلي: ${order.total} ج.م`);
+    }
+
+    // دالة لعرض الطلبات
+    function displayOrders(filterText = '') {
+        let orders = getOrders();
+        const tbody = document.getElementById('ordersTableBody');
+        const ordersCount = document.getElementById('ordersCount');
+        const totalAmountSpan = document.getElementById('totalAmount');
+        
+        ordersCount.textContent = orders.length;
+        const totalAmount = orders.reduce((sum, order) => sum + (order.total || 0), 0);
+        totalAmountSpan.textContent = totalAmount.toLocaleString();
+        
+        if (filterText) {
+            orders = orders.filter(order => 
+                (order.customer?.fullName || order.name || '').toLowerCase().includes(filterText.toLowerCase()) ||
+                (order.customer?.email || order.email || '').toLowerCase().includes(filterText.toLowerCase()) ||
+                (order.customer?.phone || order.phone || '').includes(filterText)
+            );
+        }
+        
+        if (orders.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="9" class="empty-message">لا توجد طلبات مسجلة</td></tr>';
+            return;
+        }
+        
+        // ترتيب الطلبات من الأحدث إلى الأقدم
+        orders.sort((a, b) => new Date(b.date) - new Date(a.date));
+        
+        tbody.innerHTML = '';
+        orders.forEach((order, index) => {
+            const customerName = order.customer?.fullName || order.name || 'غير محدد';
+            const customerPhone = order.customer?.phone || order.phone || 'غير محدد';
+            const customerEmail = order.customer?.email || order.email || 'غير محدد';
+            
+            let itemsText = '';
+            if (order.items && order.items.length > 0) {
+                itemsText = order.items.map(item => `${item.name} (×${item.quantity})`).join(', ');
+            } else {
+                itemsText = 'لا توجد منتجات';
+            }
+            
+            let statusClass = '';
+            let statusText = order.status || 'قيد التنفيذ';
+            if (statusText === 'تم التوصيل') statusClass = 'status-completed';
+            else if (statusText === 'قيد التنفيذ') statusClass = 'status-pending';
+            else if (statusText === 'تم الشحن') statusClass = 'status-shipped';
+            
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${index + 1}</td>
+                <td><strong>${customerName}</strong></td>
+                <td>${customerPhone}</td>
+                <td>${customerEmail}</td>
+                <td class="order-items" title="${itemsText}">${itemsText.length > 40 ? itemsText.substring(0, 40) + '...' : itemsText}</td>
+                <td><span style="color:#e26d3a; font-weight:bold;">${order.total || 0} ج.م</span></td>
+                <td>${new Date(order.date).toLocaleDateString('ar-EG')}</td>
+                <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                <td>
+                    <button class="view-btn" onclick="viewOrderDetails(${JSON.stringify(order).replace(/"/g, '&quot;')})"><i class="fas fa-eye"></i> تفاصيل</button>
+                    <button class="delete-btn" onclick="deleteOrder(${order.id})"><i class="fas fa-trash-alt"></i> حذف</button>
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+
+    function searchOrders() {
+        const searchText = document.getElementById('searchInput').value;
+        displayOrders(searchText);
+    }
+
+    function resetSearch() {
+        document.getElementById('searchInput').value = '';
+        displayOrders();
+    }
+
+    // تحميل البيانات عند فتح الصفحة
+    displayOrders();
+</script>
+</body>
+</html>

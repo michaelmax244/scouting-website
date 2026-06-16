@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+        <link rel="icon" type="image/png" href="images/favicon.png">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ملفي الشخصي | المتجر الكشفي</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: #f5f0e6; font-family: 'Inter', sans-serif; color: #1f1c17; }
+        .container { max-width: 1280px; margin: 0 auto; padding: 30px 20px; }
+        
+        /* Header Styles */
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background-color: rgba(245, 240, 230, 0.96);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid #e6dfd3;
+            padding: 0 32px;
+            transition: all 0.3s ease;
+        }
+        .site-header.scrolled {
+            background-color: rgba(245, 240, 230, 0.98);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+        .header-inner { max-width: 1280px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; height: 70px; }
+        .logo { font-size: 1.8rem; font-weight: 800; color: #1e3a2f; text-decoration: none; transition: all 0.3s ease; }
+        .logo:hover { color: #e26d3a; transform: scale(1.02); }
+        .nav-menu { display: flex; gap: 32px; font-weight: 500; font-size: 0.95rem; }
+        .nav-menu a { text-decoration: none; color: #2b2823; transition: all 0.3s ease; position: relative; padding-bottom: 5px; }
+        .nav-menu a:hover { color: #e26d3a; }
+        .nav-menu a::after {
+            content: ''; position: absolute; bottom: 0; right: 0; width: 0; height: 2px;
+            background: #e26d3a; transition: width 0.3s ease;
+        }
+        .nav-menu a:hover::after { width: 100%; left: 0; right: auto; }
+        .header-icons { display: flex; gap: 22px; font-size: 1.2rem; align-items: center; }
+        .header-icons a { color: #e26d3a; text-decoration: none; transition: all 0.3s ease; position: relative; }
+        .header-icons a:hover { color: #c75c2e; transform: translateY(-2px); }
+        .cart-icon { position: relative; }
+        .cart-badge {
+            position: absolute; top: -10px; right: -12px; background: #e26d3a; color: white;
+            border-radius: 50%; width: 20px; height: 20px; font-size: 10px; font-weight: bold;
+            display: flex; align-items: center; justify-content: center; display: none;
+            animation: bounce 0.3s ease;
+        }
+        @keyframes bounce {
+            0% { transform: scale(0.8); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        
+        /* Profile Styles */
+        .profile-grid { display: flex; gap: 30px; flex-wrap: wrap; }
+        .sidebar { flex: 1; min-width: 280px; }
+        .main-content { flex: 3; min-width: 300px; }
+        .card { background: white; border-radius: 28px; padding: 25px; margin-bottom: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .card-title { font-size: 1.3rem; font-weight: 700; color: #1e3a2f; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid #e26d3a; display: inline-block; }
+        .profile-avatar { text-align: center; margin-bottom: 20px; }
+        .profile-avatar i { font-size: 5rem; color: #e26d3a; background: #f5f0e6; padding: 20px; border-radius: 50%; }
+        .info-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #e6dfd3; }
+        .info-label { font-weight: 600; color: #7e7669; }
+        .info-value { color: #1f1c17; }
+        .logout-btn { width: 100%; background: #dc3545; color: white; border: none; padding: 12px; border-radius: 40px; font-weight: 600; cursor: pointer; margin-top: 15px; transition: 0.2s; }
+        .logout-btn:hover { background: #c82333; transform: translateY(-2px); }
+        .order-item { background: #f9f6ef; border-radius: 20px; padding: 15px; margin-bottom: 15px; border: 1px solid #e6dfd3; }
+        .order-header { display: flex; justify-content: space-between; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid #e6dfd3; }
+        .order-id { font-weight: 700; color: #e26d3a; }
+        .order-date { color: #7e7669; font-size: 0.8rem; }
+        .order-total { font-weight: 700; color: #1e3a2f; }
+        .empty-state { text-align: center; padding: 40px; color: #7e7669; }
+        .empty-state i { font-size: 3rem; margin-bottom: 15px; color: #c1b6a4; }
+        .cart-item, .wishlist-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #e6dfd3; }
+        .cart-item-name { font-weight: 500; }
+        .cart-item-price { color: #e26d3a; font-weight: 600; }
+        
+        .footer { background-color: #2a2822; color: #ddd8ce; padding: 40px 0; margin-top: 40px; text-align: center; }
+        @media (max-width: 768px) { .profile-grid { flex-direction: column; } .nav-menu { display: none; } }
+        /* ==================== RESPONSIVE CODE - لجميع الأجهزة ==================== */
+/* يمكنك إضافة هذا الكود في نهاية الـ style في كل صفحة */
+
+/* Extra Small Devices (موبايل صغير جداً - iPhone SE, Galaxy Fold) */
+@media (max-width: 480px) {
+    /* الهيدر */
+    .site-header {
+        padding: 0 15px;
+    }
+    .header-inner {
+        height: 55px;
+    }
+    .logo {
+        font-size: 1.1rem;
+    }
+    .logo::before {
+        font-size: 0.9rem;
+    }
+    .nav-menu a {
+        font-size: 0.8rem;
+        padding: 12px 15px;
+    }
+    .header-icons {
+        gap: 12px;
+        font-size: 1rem;
+    }
+    .cart-badge {
+        width: 16px;
+        height: 16px;
+        font-size: 9px;
+        top: -8px;
+        right: -8px;
+    }
+    
+    /* الحاوية الرئيسية */
+    .container {
+        padding: 0 15px;
+    }
+    
+    /* العناوين */
+    .page-title {
+        font-size: 1.6rem;
+    }
+    .hero-headline {
+        font-size: 1.8rem;
+    }
+    .hero-desc {
+        font-size: 0.85rem;
+    }
+    
+    /* الأزرار */
+    .btn-primary, .btn-add-cart, .btn-buy-now {
+        padding: 10px 20px;
+        font-size: 0.85rem;
+    }
+    
+    /* شريط الفلترة */
+    .filter-bar {
+        flex-direction: column;
+        gap: 15px;
+    }
+    .filter-group {
+        justify-content: center;
+        gap: 10px;
+    }
+    .filter-dropdown {
+        padding: 6px 12px;
+        font-size: 0.75rem;
+    }
+    .sort-select {
+        padding: 8px 15px;
+        font-size: 0.8rem;
+    }
+    
+    /* المنتجات */
+    .product-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    .product-card {
+        max-width: 100%;
+    }
+    .product-title {
+        font-size: 0.9rem;
+    }
+    .product-price {
+        font-size: 1rem;
+    }
+    
+    /* الفوتر */
+    .footer-grid {
+        flex-direction: column;
+        gap: 30px;
+        text-align: center;
+    }
+    .footer-col h4:after {
+        right: 50%;
+        transform: translateX(50%);
+    }
+    .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+    }
+    .social-icons-footer {
+        justify-content: center;
+    }
+    .payment-methods {
+        justify-content: center;
+    }
+    
+    /* البانر */
+    .hero-banner {
+        padding: 20px;
+        flex-direction: column;
+        text-align: center;
+    }
+    .banner-text h2 {
+        font-size: 1.3rem;
+    }
+    .banner-img {
+        max-width: 150px;
+        margin-top: 15px;
+    }
+    
+    /* الصفحات الداخلية */
+    .product-detail {
+        padding: 20px;
+    }
+    .product-title-detail {
+        font-size: 1.3rem;
+    }
+    .product-price-detail {
+        font-size: 1.5rem;
+    }
+    .quantity-selector {
+        justify-content: center;
+    }
+    .action-buttons {
+        flex-direction: column;
+    }
+    
+    /* السلة */
+    .cart-item {
+        flex-direction: column;
+        text-align: center;
+    }
+    .cart-item-img {
+        margin: 0 auto;
+    }
+    .cart-item-total {
+        text-align: center;
+        margin-top: 10px;
+    }
+    .cart-summary {
+        position: static;
+        margin-top: 20px;
+    }
+    
+    /* التسجيل والدخول */
+    .registration-card, .login-container, .signup-container {
+        padding: 25px 20px;
+    }
+    .registration-card h2, .login-container h1, .signup-container h1 {
+        font-size: 1.5rem;
+    }
+    .reg-input {
+        padding: 10px 14px;
+    }
+}
+
+/* Small Devices (موبايل متوسط وكبير - 481px to 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+    .site-header {
+        padding: 0 20px;
+    }
+    .header-inner {
+        height: 60px;
+    }
+    .logo {
+        font-size: 1.3rem;
+    }
+    .nav-menu a {
+        font-size: 0.85rem;
+        padding: 12px 20px;
+    }
+    .container {
+        padding: 0 20px;
+    }
+    .page-title {
+        font-size: 2rem;
+    }
+    .hero-headline {
+        font-size: 2rem;
+    }
+    .product-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+    .filter-bar {
+        flex-direction: column;
+        gap: 15px;
+    }
+    .filter-group {
+        justify-content: center;
+    }
+    .footer-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 30px;
+    }
+    .hero-banner {
+        padding: 25px;
+    }
+    .banner-text h2 {
+        font-size: 1.5rem;
+    }
+    .product-detail {
+        flex-direction: column;
+        padding: 25px;
+    }
+    .checkout-grid {
+        flex-direction: column;
+    }
+    .cart-summary {
+        position: static;
+        margin-top: 20px;
+    }
+}
+
+/* Medium Devices (تابلت - 769px to 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .container {
+        max-width: 960px;
+        padding: 0 25px;
+    }
+    .product-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 25px;
+    }
+    .hero-headline {
+        font-size: 2.5rem;
+    }
+    .footer-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 40px;
+    }
+    .product-detail {
+        padding: 30px;
+    }
+}
+
+/* Large Devices (لاب توب صغير - 1025px to 1280px) */
+@media (min-width: 1025px) and (max-width: 1280px) {
+    .container {
+        max-width: 1100px;
+    }
+    .product-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+    }
+}
+
+/* Extra Large Devices (شاشات كبيرة 4K - 1921px and above) */
+@media (min-width: 1921px) {
+    .container {
+        max-width: 1600px;
+    }
+    body {
+        font-size: 1.1rem;
+    }
+    .page-title {
+        font-size: 3.5rem;
+    }
+    .hero-headline {
+        font-size: 4rem;
+    }
+    .product-grid {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 35px;
+    }
+    .btn-primary, .btn-add-cart, .btn-buy-now {
+        padding: 16px 40px;
+        font-size: 1.1rem;
+    }
+}
+
+/* ==================== ميزات إضافية لتحسين التجربة ==================== */
+
+/* تحسين اللمس على الموبايل */
+@media (max-width: 768px) {
+    button, 
+    .btn-primary, 
+    .btn-add-cart, 
+    .btn-buy-now,
+    .filter-dropdown,
+    .detail-btn,
+    .nav-menu a,
+    .header-icons a,
+    .product-card,
+    .quantity-btn,
+    .page-number,
+    .scouting-btn {
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+    }
+    
+    /* تكبير مساحة النقر */
+    .nav-menu a {
+        padding: 14px 20px;
+    }
+    .filter-dropdown {
+        padding: 8px 16px;
+    }
+    .quantity-btn {
+        width: 44px;
+        height: 44px;
+    }
+    
+    /* منع التكبير التلقائي على iOS */
+    input, select, textarea {
+        font-size: 16px;
+    }
+}
+
+/* تحسين التمرير */
+html {
+    scroll-behavior: smooth;
+}
+
+/* تحسين عرض الصور */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* تحسين الجداول على الموبايل */
+@media (max-width: 768px) {
+    table, thead, tbody, th, td, tr {
+        display: block;
+    }
+    thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+    tr {
+        margin-bottom: 15px;
+        border: 1px solid #e6dfd3;
+        border-radius: 16px;
+        padding: 10px;
+    }
+    td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 12px;
+        border-bottom: 1px solid #e6dfd3;
+    }
+    td:before {
+        content: attr(data-label);
+        font-weight: bold;
+        margin-left: 10px;
+    }
+}
+
+/* تحسين عرض الفيديو على الموبايل */
+.video-container {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+}
+.video-container video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+    </style>
+</head>
+<body>
+
+<header class="site-header">
+    <div class="header-inner">
+        <a href="../index.html" class="logo">المتجر الكشفي</a>
+        <div class="nav-menu">
+            <a href="../index.html">الرئيسية</a>
+            <a href="../shop.html">القمصان و الملابس</a>
+            <a href="../Tools.html">أدوات</a>
+            <a href="../Who_we.html">من نحن</a>
+            <a href="call_me.html">اتصل بنا</a>
+        </div>
+        <div class="header-icons">
+            <a href="#" id="searchIconBtn"><i class="fas fa-search"></i></a>
+            <a href="Header icon/cart.html" class="cart-icon" style="position: relative;">
+                <i class="fas fa-shopping-bag"></i>
+                <span id="cartCountBadge" class="cart-badge">0</span>
+            </a>
+            <a href="Header icon/user-profile.html"><i class="fas fa-user"></i></a>
+        </div>
+    </div>
+</header>
+
+<main>
+    <div class="container">
+        <div id="profileContent" class="profile-grid"></div>
+    </div>
+</main>
+
+<footer class="footer">
+    <div class="container">
+        <p>© 2026 المتجر الكشفي — جميع الحقوق محفوظة</p>
+    </div>
+</footer>
+
+<script>
+    function getUsers() { const users = localStorage.getItem('scout_users'); return users ? JSON.parse(users) : []; }
+    function getCurrentUser() { const current = localStorage.getItem('current_user'); return current ? JSON.parse(current) : null; }
+    function saveUsers(users) { localStorage.setItem('scout_users', JSON.stringify(users)); }
+    function updateCartBadge() {
+        const badge = document.getElementById('cartCountBadge');
+        if (!badge) return;
+        const cart = JSON.parse(localStorage.getItem('scout_cart')) || [];
+        const total = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+        badge.textContent = total;
+        badge.style.display = total > 0 ? 'flex' : 'none';
+    }
+
+    function logout() {
+        localStorage.removeItem('current_user');
+        window.location.href = 'login.html';
+    }
+
+    function renderProfile() {
+        const currentUser = getCurrentUser();
+        if (!currentUser) { window.location.href = 'login.html'; return; }
+        
+        const users = getUsers();
+        const user = users.find(u => u.id === currentUser.id);
+        if (!user) { logout(); return; }
+        
+        const sampleOrders = [
+            { id: "#ORD-001", date: "2024-01-15", total: 450, status: "تم التوصيل", items: 3 },
+            { id: "#ORD-002", date: "2024-02-20", total: 320, status: "قيد التوصيل", items: 2 }
+        ];
+        
+        const container = document.getElementById('profileContent');
+        container.innerHTML = `
+            <div class="sidebar">
+                <div class="card">
+                    <div class="profile-avatar"><i class="fas fa-user-shield"></i></div>
+                    <div class="info-row"><span class="info-label"><i class="fas fa-user"></i> الاسم</span><span class="info-value">${user.fullName}</span></div>
+                    <div class="info-row"><span class="info-label"><i class="fas fa-envelope"></i> البريد</span><span class="info-value">${user.email}</span></div>
+                    <div class="info-row"><span class="info-label"><i class="fas fa-phone"></i> الهاتف</span><span class="info-value">${user.phone}</span></div>
+                    <div class="info-row"><span class="info-label"><i class="fas fa-calendar"></i> تاريخ الانضمام</span><span class="info-value">${new Date(user.joinDate).toLocaleDateString('ar-EG')}</span></div>
+                    <div class="info-row"><span class="info-label"><i class="fas fa-star"></i> الرتبة الكشفية</span><span class="info-value">${user.scoutRank || 'كشاف جديد'}</span></div>
+                    <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> تسجيل خروج</button>
+                </div>
+            </div>
+            <div class="main-content">
+                <div class="card"><h3 class="card-title"><i class="fas fa-box"></i> مشترياتي</h3>
+                    ${sampleOrders.map(order => `<div class="order-item"><div class="order-header"><span class="order-id">${order.id}</span><span class="order-date">${order.date}</span></div><div class="order-header"><span>عدد المنتجات: ${order.items}</span><span class="order-total">${order.total} ج.م</span></div><div>الحالة: <span style="color:#2a7a3e;">${order.status}</span></div></div>`).join('')}
+                </div>
+                <div class="card"><h3 class="card-title"><i class="fas fa-trophy"></i> إنجازاتي الكشفية</h3>
+                    <div class="info-row"><span>الشارات التي تم الحصول عليها</span><span>3 شارات ⭐⭐⭐</span></div>
+                    <div class="info-row"><span>المشاركات في المخيمات</span><span>2 مخيم</span></div>
+                    <div class="info-row"><span>نقاط الولاء</span><span style="color:#e26d3a; font-weight:bold;">250 نقطة</span></div>
+                </div>
+            </div>
+        `;
+    }
+    
+    renderProfile();
+    updateCartBadge();
+    
+    window.addEventListener('scroll', function() {
+        const header = document.querySelector('.site-header');
+        if (window.scrollY > 50) header.classList.add('scrolled');
+        else header.classList.remove('scrolled');
+    });
+</script>
+</body>
+</html>
