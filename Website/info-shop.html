@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+        <link rel="icon" type="image/png" href="images/favicon.png">
+
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تفاصيل المنتج | المتجر الكشفي</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: #f5f0e6; font-family: 'Inter', sans-serif; }
+        .container { max-width: 1280px; margin: 0 auto; padding: 30px 20px; }
+        
+        .site-header {
+            position: sticky; top: 0; z-index: 1000; background-color: rgba(245, 240, 230, 0.96);
+            backdrop-filter: blur(2px); border-bottom: 1px solid #e6dfd3; padding: 0 32px;
+        }
+        .header-inner { max-width: 1280px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; height: 70px; }
+        .logo { font-size: 1.8rem; font-weight: 800; color: #1f1c17; text-decoration: none; }
+        .nav-menu { display: flex; gap: 32px; font-weight: 500; }
+        .nav-menu a { text-decoration: none; color: #2b2823; }
+        .header-icons { display: flex; gap: 22px; font-size: 1.2rem; align-items: center; }
+        .header-icons a { color: #2b2823; position: relative; }
+        .cart-badge { position: absolute; top: -10px; right: -12px; background: #e26d3a; color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 11px; display: flex; align-items: center; justify-content: center; display: none; }
+        
+        .back-link { display: inline-block; margin-bottom: 20px; color: #e26d3a; text-decoration: none; font-weight: 600; }
+        .product-detail { background: white; border-radius: 40px; padding: 40px; display: flex; flex-wrap: wrap; gap: 40px; }
+        .product-gallery { flex: 1; min-width: 300px; }
+        .main-image { width: 100%; aspect-ratio: 1 / 1; border-radius: 28px; overflow: hidden; background: #f5f0e6; margin-bottom: 20px; }
+        .main-image img { width: 100%; height: 100%; object-fit: cover; }
+        .product-info-detail { flex: 1; min-width: 300px; }
+        .product-title-detail { font-size: 2rem; font-weight: 800; margin-bottom: 15px; }
+        .product-category { display: inline-block; background: #f5f0e6; padding: 6px 16px; border-radius: 30px; font-size: 0.8rem; margin-bottom: 20px; }
+        .product-price-detail { font-size: 2rem; font-weight: 800; color: #e26d3a; margin-bottom: 15px; }
+        .old-price { font-size: 1.2rem; color: #999; text-decoration: line-through; margin-left: 15px; }
+        .discount-badge { display: inline-block; background: #dc3545; color: white; padding: 4px 12px; border-radius: 30px; font-size: 0.8rem; margin-right: 15px; }
+        .product-description { color: #5b5549; line-height: 1.6; margin: 20px 0; }
+        .product-features { list-style: none; margin: 20px 0; }
+        .product-features li { padding: 8px 0; border-bottom: 1px solid #e6dfd3; display: flex; align-items: center; gap: 10px; }
+        .product-features li i { color: #2a7a3e; width: 25px; }
+        .quantity-selector { display: flex; align-items: center; gap: 15px; margin: 25px 0; }
+        .quantity-btn { width: 40px; height: 40px; border-radius: 50%; background: #f5f0e6; border: none; font-size: 1.2rem; cursor: pointer; }
+        .quantity-input { width: 60px; text-align: center; font-size: 1.2rem; padding: 8px; border: 1px solid #e6dfd3; border-radius: 30px; }
+        .action-buttons { display: flex; gap: 20px; margin-top: 30px; }
+        .btn-add-cart { flex: 1; background: #1e3a2f; color: white; border: none; padding: 15px; border-radius: 50px; font-weight: 600; cursor: pointer; }
+        .btn-buy-now { flex: 1; background: #e26d3a; color: white; border: none; padding: 15px; border-radius: 50px; font-weight: 600; cursor: pointer; }
+        
+        .footer { background-color: #2a2822; color: #ddd8ce; padding: 56px 0 32px; margin-top: 60px; text-align: center; }
+        @media (max-width: 768px) { .product-detail { flex-direction: column; } .nav-menu { display: none; } }
+        
+        /* RESPONSIVE CODE */
+        @media (max-width: 480px) {
+            .site-header { padding: 0 15px; }
+            .header-inner { height: 55px; }
+            .logo { font-size: 1.1rem; }
+            .container { padding: 0 15px; }
+            .page-title { font-size: 1.6rem; }
+            .product-grid { grid-template-columns: 1fr; gap: 20px; }
+            .product-detail { padding: 20px; flex-direction: column; }
+            .product-title-detail { font-size: 1.3rem; }
+            .product-price-detail { font-size: 1.5rem; }
+            .action-buttons { flex-direction: column; }
+        }
+        
+        @media (min-width: 481px) and (max-width: 768px) {
+            .container { padding: 0 20px; }
+            .product-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+            .product-detail { flex-direction: column; padding: 25px; }
+        }
+        
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .container { max-width: 960px; padding: 0 25px; }
+            .product-grid { grid-template-columns: repeat(3, 1fr); gap: 25px; }
+        }
+        
+        img { max-width: 100%; height: auto; }
+        html { scroll-behavior: smooth; }
+    </style>
+</head>
+<body>
+
+<header class="site-header">
+    <div class="header-inner">
+<div class="logo">
+    <a href="index.html" style="text-decoration: none; color: inherit;">المتجر الكشفي</a>
+</div>        <div class="nav-menu">
+            <a href="index.html">الرئيسية</a>
+            <a href="shop.html">القمصان و الملابس</a>
+            <a href="Tools.html">أدوات</a>
+            <a href="Who_we.html">من نحن</a>
+            <a href="call_me.html">اتصل بنا</a>
+        </div>
+        <div class="header-icons">
+    <a href="#" id="searchIconBtn"><i class="fas fa-search"></i></a>
+    <a href="Header icon/cart.html" class="cart-icon" style="position: relative;">
+        <i class="fas fa-shopping-bag"></i>
+        <span id="cartCountBadge" style="position: absolute; top: -10px; right: -10px; background: #e26d3a; color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 11px; display: flex; align-items: center; justify-content: center; display: none;">0</span>
+    </a>
+    <a href="Header icon/user-profile.html"><i class="fas fa-user"></i></a>
+</div>
+        </div>
+    </div>
+</header>
+
+<main>
+    <div class="container">
+        <a href="javascript:history.back()" class="back-link"><i class="fas fa-arrow-right"></i> العودة إلى المتجر</a>
+        <div id="productDetailContainer" class="product-detail">
+            <div style="text-align: center; width: 100%; padding: 60px;">
+                <i class="fas fa-spinner fa-spin" style="font-size: 3rem; color: #e26d3a;"></i>
+                <p>جاري تحميل المنتج...</p>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer class="footer">
+    <div class="container">
+        <p>© 2026 المتجر الكشفي — جميع الحقوق محفوظة</p>
+    </div>
+</footer>
+
+<script>
+// ==================== جميع المنتجات (مع الوصف وصورة واحدة فقط) ====================
+const allProducts = [
+    { id: 1, name: "قميص ازرق كشفي", price: 320, oldPrice: 450, discount: "29%", category: "قمصان", image: "images/WhatsApp Image 2026-06-16 at 2.57.26 AM.jpeg", description: "قميص كشفي فاخر مصنوع من أجود أنواع الأقمشة، مناسب للقادة والمشرفين.", features: ["خامة قطن 100% فاخر", "مقاسات متعددة", "قابل للغسل", "ألوان ثابتة"] },
+    { id: 2, name: "شارات كشفية", price: 210, oldPrice: null, discount: null, category: "إكسسوارات", image: "images/WhatsApp Image 2026-06-16 at 2.56.29 AM (1).jpeg", description: "مجموعة شارات كشفية متنوعة بتصاميم جميلة وجودة عالية.", features: ["تطريز دقيق", "ألوان ثابتة", "مقاومة للغسل", "أحجام متنوعة"] },
+    { id: 3, name: "حزام كشفي جلد طبيعي", price: 85, oldPrice: 120, discount: "29%", category: "إكسسوارات", image: "images/WhatsApp Image 2026-06-16 at 2.58.06 AM.jpeg", description: "حزام كشفي مصنوع من الجلد الطبيعي عالي الجودة.", features: ["جلد طبيعي", "إبزيم معدني", "قابل للتعديل", "متين"] },
+    { id: 4, name: "قبعة كشفية قماش ضد حرارة الشمس", price: 490, oldPrice: 650, discount: "25%", category: "إكسسوارات", image: "images/WhatsApp Image 2026-06-16 at 2.58.38 AM.jpeg", description: "قبعة كشفية مصنوعة من قماش عالي الجودة، مقاومة لحرارة الشمس.", features: ["مقاوم لأشعة الشمس", "قطني جيد التهوية", "مقاسات متعددة", "خفيفة الوزن"] },
+    { id: 5, name: "جاكيت كشفي بحري ضد الماء", price: 150, oldPrice: null, discount: null, category: "جواكت", image: "images/جاكيت مائي.png", description: "جاكيت كشفي بحري مقاوم للماء والرياح.", features: ["مقاوم للماء", "مقاوم للرياح", "خفيف الوزن", "قابل للطي"] },
+    { id: 6, name: "قميص قادة كشفية", price: 95, oldPrice: null, discount: null, category: "قمصان", image: "images/قميص 3.png", description: "قميص مخصص لقادة الكشافة يتميز بالأناقة والجودة العالية.", features: ["خامة فاخرة", "أكمام طويلة", "جيوب أمامية", "ألوان ثابتة"] },
+    { id: 7, name: "منديل متقدم", price: 120, oldPrice: 150, discount: "20%", category: "إكسسوارات", image: "images/منديل اشبال.png", description: "منديل شارة مخصص لمرحلة المتقدم، مصنوع من قماش فاخر.", features: ["قماش حريري", "تطريز ذهبي", "ألوان مميزة", "حجم مثالي"] },
+    { id: 8, name: "منديل الربطة الخشبية", price: 280, oldPrice: 350, discount: "20%", category: "إكسسوارات", image: "images/منديل خشبية.png", description: "منديل شارة بتصميم خشبي مميز، مصنوع من خشب طبيعي.", features: ["خشب طبيعي", "نقش دقيق", "خفة الوزن", "تصميم فريد"] },
+    { id: 9, name: "صفارة متقدم كشفية", price: 320, oldPrice: null, discount: null, category: "أدوات", image: "images/WhatsApp Image 2026-06-16 at 2.56.29 AM.jpeg", description: "صفارة احترافية عالية الجودة مثالية للاستخدام في الطابور الصباحي.", features: ["صوت قوي", "معدن مقاوم للصدأ", "حلقة تعليق", "خفيفة الوزن"] },
+    { id: 10, name: "طبلة خشبية متينة", price: 210, oldPrice: null, discount: null, category: "أدوات", image: "images/WhatsApp Image 2026-06-16 at 2.59.05 AM.jpeg", description: "طبلة خشبية تقليدية عالية الجودة، تستخدم في الطقوس الكشفية.", features: ["خشب طبيعي", "صوت نقي", "حزام حمل", "خفيفة الوزن"] },
+    { id: 11, name: "اعواد الطبلة خشبية متينة", price: 85, oldPrice: null, discount: null, category: "أدوات", image: "images/WhatsApp Image 2026-06-16 at 2.59.40 AM.jpeg", description: "أعواد طبلة كشفية مصنوعة من الخشب المتين.", features: ["خشب طبيعي", "قبضة مريحة", "خفيفة الوزن", "مقاومة للكسر"] },
+    { id: 12, name: "الربطة الخشبية", price: 490, oldPrice: null, discount: null, category: "إكسسوارات", image: "images/WhatsApp Image 2026-06-16 at 3.00.46 AM.jpeg", description: "ربطة عنق خشبية بتصميم كشفي مميز.", features: ["خشب طبيعي", "نقش دقيق", "حجم مناسب", "تصميم أصيل"] },
+    { id: 13, name: "رابطة منديل كشفية", price: 150, oldPrice: null, discount: null, category: "إكسسوارات", image: "images/WhatsApp Image 2026-06-16 at 3.01.06 AM.jpeg", description: "رابطة منديل كشفية معدنية أنيقة.", features: ["معدن فضي", "نقش كشفي", "متين", "مقاوم للصدأ"] },
+    { id: 14, name: "سكين كشفي حاد", price: 95, oldPrice: null, discount: null, category: "أدوات", image: "images/PhotoshopExtension_Image (30).png", description: "سكين كشفي حادة متعددة الاستخدامات.", features: ["حد فولاذي", "مقبض خشبي", "غمد جلد", "خفيفة الوزن"] },
+    { id: 15, name: "حقيبة كشفية كبيرة", price: 120, oldPrice: null, discount: null, category: "أدوات", image: "images/PhotoshopExtension_Image (31).png", description: "حقيبة كشفية كبيرة وعملية.", features: ["قماش متين", "مقاومة للماء", "جيوب متعددة", "مقاس كبير"] },
+    { id: 16, name: "اعواد خشبية خيمية كشفية متينة", price: 110, oldPrice: null, discount: null, category: "أدوات", image: "images/PhotoshopExtension_Image (32).png", description: "أعواد خشبية كشفية متينة لنصب الخيام.", features: ["خشب طبيعي", "مقاوم للعوامل الجوية", "أطوال متعددة", "خفيفة الوزن"] }
+];
+
+    let cart = JSON.parse(localStorage.getItem('scout_cart')) || [];
+
+    function updateCartBadge() {
+        const badge = document.getElementById('cartCountBadge');
+        if (!badge) return;
+        const total = cart.reduce((sum, item) => sum + item.quantity, 0);
+        badge.textContent = total;
+        badge.style.display = total > 0 ? 'flex' : 'none';
+        localStorage.setItem('scout_cart', JSON.stringify(cart));
+    }
+
+    function addToCart(productId, productName, productPrice, quantity) {
+        const existing = cart.find(item => item.id === productId);
+        if (existing) {
+            existing.quantity += quantity;
+        } else {
+            cart.push({ id: productId, name: productName, price: productPrice, quantity: quantity, image: allProducts.find(p => p.id === productId)?.image || "" });
+        }
+        updateCartBadge();
+        return cart;
+    }
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const productId = parseInt(urlParams.get("id"));
+    const product = allProducts.find(p => p.id === productId);
+
+    function renderProductDetail() {
+        const container = document.getElementById("productDetailContainer");
+        if (!product) {
+            container.innerHTML = `<div style="text-align:center; padding:60px;"><i class="fas fa-exclamation-triangle" style="font-size:3rem; color:#dc3545;"></i><h2>المنتج غير موجود</h2><a href="shop.html" style="display:inline-block; margin-top:20px; background:#e26d3a; color:white; padding:12px 30px; border-radius:40px;">العودة للمتجر</a></div>`;
+            return;
+        }
+
+        // صورة واحدة فقط (بدون معرض صور متعددة)
+        let imagesHtml = `<div class="main-image"><img src="${product.image}" alt="${product.name}" id="mainImg"></div>`;
+
+        let priceHtml = `<div class="product-price-detail">${product.price} ج.م</div>`;
+        if (product.oldPrice) {
+            priceHtml = `<div class="product-price-detail"><span class="old-price">${product.oldPrice} ج.م</span> ${product.price} ج.م <span class="discount-badge">خصم ${product.discount}</span></div>`;
+        }
+
+        let featuresHtml = `<ul class="product-features">`;
+        for (let i = 0; i < product.features.length; i++) {
+            featuresHtml += `<li><i class="fas fa-check-circle"></i> ${product.features[i]}</li>`;
+        }
+        featuresHtml += `</ul>`;
+
+        container.innerHTML = `
+            <div class="product-gallery">${imagesHtml}</div>
+            <div class="product-info-detail">
+                <span class="product-category">${product.category}</span>
+                <h1 class="product-title-detail">${product.name}</h1>
+                ${priceHtml}
+                <div class="product-description"><p>${product.description}</p></div>
+                ${featuresHtml}
+                <div class="quantity-selector">
+                    <button class="quantity-btn" onclick="changeQuantity(-1)">-</button>
+                    <input type="number" id="quantity" class="quantity-input" value="1" min="1" max="99">
+                    <button class="quantity-btn" onclick="changeQuantity(1)">+</button>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn-add-cart" onclick="addToCartAndAlert()"><i class="fas fa-shopping-cart"></i> أضف إلى السلة</button>
+                    <button class="btn-buy-now" onclick="buyNow()"><i class="fas fa-bolt"></i> اشتري الآن</button>
+                </div>
+            </div>
+        `;
+    }
+
+    window.changeQuantity = function(change) {
+        const input = document.getElementById("quantity");
+        let val = parseInt(input.value) + change;
+        if (val < 1) val = 1;
+        if (val > 99) val = 99;
+        input.value = val;
+    };
+
+    window.addToCartAndAlert = function() {
+        const quantity = parseInt(document.getElementById("quantity").value);
+        addToCart(product.id, product.name, product.price, quantity);
+        alert("✅ تم إضافة " + quantity + " × " + product.name + " إلى سلة التسوق");
+    };
+
+    window.buyNow = function() {
+        const quantity = parseInt(document.getElementById("quantity").value);
+        addToCart(product.id, product.name, product.price, quantity);
+        window.location.href = "Header icon/cart.html";
+    };
+
+    renderProductDetail();
+    updateCartBadge();
+</script>
+</body>
+</html>

@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+        <link rel="icon" type="image/png" href="images/favicon.png">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول | المتجر الكشفي</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1e3a2f 0%, #2a5a44 100%);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: white;
+            border-radius: 48px;
+            padding: 40px;
+            max-width: 450px;
+            width: 100%;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .scout-badge {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .scout-badge i {
+            font-size: 3.5rem;
+            color: #e26d3a;
+            background: #f5f0e6;
+            padding: 15px;
+            border-radius: 50%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #1e3a2f;
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #7e7669;
+            margin-bottom: 30px;
+            font-size: 0.9rem;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #1f1c17;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid #e6dfd3;
+            border-radius: 30px;
+            font-size: 1rem;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        .input-group input:focus {
+            border-color: #e26d3a;
+            box-shadow: 0 0 0 3px rgba(226, 109, 58, 0.1);
+        }
+
+        .btn-primary {
+            width: 100%;
+            background: #e26d3a;
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 10px;
+        }
+
+        .btn-primary:hover {
+            background: #c75c2e;
+            transform: translateY(-2px);
+        }
+
+        .signup-link {
+            text-align: center;
+            margin-top: 25px;
+            color: #7e7669;
+        }
+
+        .signup-link a {
+            color: #e26d3a;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .signup-link a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 30px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 0.85rem;
+            display: none;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 12px;
+            border-radius: 30px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 0.85rem;
+            display: none;
+        }/* ==================== RESPONSIVE CODE - لجميع الأجهزة ==================== */
+/* يمكنك إضافة هذا الكود في نهاية الـ style في كل صفحة */
+
+/* Extra Small Devices (موبايل صغير جداً - iPhone SE, Galaxy Fold) */
+@media (max-width: 480px) {
+    /* الهيدر */
+    .site-header {
+        padding: 0 15px;
+    }
+    .header-inner {
+        height: 55px;
+    }
+    .logo {
+        font-size: 1.1rem;
+    }
+    .logo::before {
+        font-size: 0.9rem;
+    }
+    .nav-menu a {
+        font-size: 0.8rem;
+        padding: 12px 15px;
+    }
+    .header-icons {
+        gap: 12px;
+        font-size: 1rem;
+    }
+    .cart-badge {
+        width: 16px;
+        height: 16px;
+        font-size: 9px;
+        top: -8px;
+        right: -8px;
+    }
+    
+    /* الحاوية الرئيسية */
+    .container {
+        padding: 0 15px;
+    }
+    
+    /* العناوين */
+    .page-title {
+        font-size: 1.6rem;
+    }
+    .hero-headline {
+        font-size: 1.8rem;
+    }
+    .hero-desc {
+        font-size: 0.85rem;
+    }
+    
+    /* الأزرار */
+    .btn-primary, .btn-add-cart, .btn-buy-now {
+        padding: 10px 20px;
+        font-size: 0.85rem;
+    }
+    
+    /* شريط الفلترة */
+    .filter-bar {
+        flex-direction: column;
+        gap: 15px;
+    }
+    .filter-group {
+        justify-content: center;
+        gap: 10px;
+    }
+    .filter-dropdown {
+        padding: 6px 12px;
+        font-size: 0.75rem;
+    }
+    .sort-select {
+        padding: 8px 15px;
+        font-size: 0.8rem;
+    }
+    
+    /* المنتجات */
+    .product-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    .product-card {
+        max-width: 100%;
+    }
+    .product-title {
+        font-size: 0.9rem;
+    }
+    .product-price {
+        font-size: 1rem;
+    }
+    
+    /* الفوتر */
+    .footer-grid {
+        flex-direction: column;
+        gap: 30px;
+        text-align: center;
+    }
+    .footer-col h4:after {
+        right: 50%;
+        transform: translateX(50%);
+    }
+    .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+    }
+    .social-icons-footer {
+        justify-content: center;
+    }
+    .payment-methods {
+        justify-content: center;
+    }
+    
+    /* البانر */
+    .hero-banner {
+        padding: 20px;
+        flex-direction: column;
+        text-align: center;
+    }
+    .banner-text h2 {
+        font-size: 1.3rem;
+    }
+    .banner-img {
+        max-width: 150px;
+        margin-top: 15px;
+    }
+    
+    /* الصفحات الداخلية */
+    .product-detail {
+        padding: 20px;
+    }
+    .product-title-detail {
+        font-size: 1.3rem;
+    }
+    .product-price-detail {
+        font-size: 1.5rem;
+    }
+    .quantity-selector {
+        justify-content: center;
+    }
+    .action-buttons {
+        flex-direction: column;
+    }
+    
+    /* السلة */
+    .cart-item {
+        flex-direction: column;
+        text-align: center;
+    }
+    .cart-item-img {
+        margin: 0 auto;
+    }
+    .cart-item-total {
+        text-align: center;
+        margin-top: 10px;
+    }
+    .cart-summary {
+        position: static;
+        margin-top: 20px;
+    }
+    
+    /* التسجيل والدخول */
+    .registration-card, .login-container, .signup-container {
+        padding: 25px 20px;
+    }
+    .registration-card h2, .login-container h1, .signup-container h1 {
+        font-size: 1.5rem;
+    }
+    .reg-input {
+        padding: 10px 14px;
+    }
+}
+
+/* Small Devices (موبايل متوسط وكبير - 481px to 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+    .site-header {
+        padding: 0 20px;
+    }
+    .header-inner {
+        height: 60px;
+    }
+    .logo {
+        font-size: 1.3rem;
+    }
+    .nav-menu a {
+        font-size: 0.85rem;
+        padding: 12px 20px;
+    }
+    .container {
+        padding: 0 20px;
+    }
+    .page-title {
+        font-size: 2rem;
+    }
+    .hero-headline {
+        font-size: 2rem;
+    }
+    .product-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+    .filter-bar {
+        flex-direction: column;
+        gap: 15px;
+    }
+    .filter-group {
+        justify-content: center;
+    }
+    .footer-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 30px;
+    }
+    .hero-banner {
+        padding: 25px;
+    }
+    .banner-text h2 {
+        font-size: 1.5rem;
+    }
+    .product-detail {
+        flex-direction: column;
+        padding: 25px;
+    }
+    .checkout-grid {
+        flex-direction: column;
+    }
+    .cart-summary {
+        position: static;
+        margin-top: 20px;
+    }
+}
+
+/* Medium Devices (تابلت - 769px to 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .container {
+        max-width: 960px;
+        padding: 0 25px;
+    }
+    .product-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 25px;
+    }
+    .hero-headline {
+        font-size: 2.5rem;
+    }
+    .footer-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 40px;
+    }
+    .product-detail {
+        padding: 30px;
+    }
+}
+
+/* Large Devices (لاب توب صغير - 1025px to 1280px) */
+@media (min-width: 1025px) and (max-width: 1280px) {
+    .container {
+        max-width: 1100px;
+    }
+    .product-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+    }
+}
+
+/* Extra Large Devices (شاشات كبيرة 4K - 1921px and above) */
+@media (min-width: 1921px) {
+    .container {
+        max-width: 1600px;
+    }
+    body {
+        font-size: 1.1rem;
+    }
+    .page-title {
+        font-size: 3.5rem;
+    }
+    .hero-headline {
+        font-size: 4rem;
+    }
+    .product-grid {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 35px;
+    }
+    .btn-primary, .btn-add-cart, .btn-buy-now {
+        padding: 16px 40px;
+        font-size: 1.1rem;
+    }
+}
+
+/* ==================== ميزات إضافية لتحسين التجربة ==================== */
+
+/* تحسين اللمس على الموبايل */
+@media (max-width: 768px) {
+    button, 
+    .btn-primary, 
+    .btn-add-cart, 
+    .btn-buy-now,
+    .filter-dropdown,
+    .detail-btn,
+    .nav-menu a,
+    .header-icons a,
+    .product-card,
+    .quantity-btn,
+    .page-number,
+    .scouting-btn {
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+    }
+    
+    /* تكبير مساحة النقر */
+    .nav-menu a {
+        padding: 14px 20px;
+    }
+    .filter-dropdown {
+        padding: 8px 16px;
+    }
+    .quantity-btn {
+        width: 44px;
+        height: 44px;
+    }
+    
+    /* منع التكبير التلقائي على iOS */
+    input, select, textarea {
+        font-size: 16px;
+    }
+}
+
+/* تحسين التمرير */
+html {
+    scroll-behavior: smooth;
+}
+
+/* تحسين عرض الصور */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* تحسين الجداول على الموبايل */
+@media (max-width: 768px) {
+    table, thead, tbody, th, td, tr {
+        display: block;
+    }
+    thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+    tr {
+        margin-bottom: 15px;
+        border: 1px solid #e6dfd3;
+        border-radius: 16px;
+        padding: 10px;
+    }
+    td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 12px;
+        border-bottom: 1px solid #e6dfd3;
+    }
+    td:before {
+        content: attr(data-label);
+        font-weight: bold;
+        margin-left: 10px;
+    }
+}
+
+/* تحسين عرض الفيديو على الموبايل */
+.video-container {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+}
+.video-container video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="scout-badge">
+            <i class="fas fa-compass"></i>
+        </div>
+        <h1>تسجيل الدخول</h1>
+        <p class="subtitle">مرحباً بعودتك! سجل دخولك للمتابعة</p>
+
+        <div id="errorMsg" class="error-message"></div>
+        <div id="successMsg" class="success-message"></div>
+
+        <form id="loginForm">
+            <div class="input-group">
+                <label><i class="fas fa-envelope"></i> البريد الإلكتروني</label>
+                <input type="email" id="email" placeholder="example@email.com" required>
+            </div>
+            <div class="input-group">
+                <label><i class="fas fa-lock"></i> كلمة المرور</label>
+                <input type="password" id="password" placeholder="********" required>
+            </div>
+            <button type="submit" class="btn-primary">دخول <i class="fas fa-arrow-left"></i></button>
+        </form>
+
+        <div class="signup-link">
+            ليس لديك حساب؟ <a href="signup.html">إنشاء حساب جديد</a>
+        </div>
+    </div>
+
+    <script>
+        function getUsers() {
+            const users = localStorage.getItem('scout_users');
+            return users ? JSON.parse(users) : [];
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            
+            document.getElementById('errorMsg').style.display = 'none';
+            document.getElementById('successMsg').style.display = 'none';
+            
+            if (!email || !password) {
+                showError('⚠️ الرجاء إدخال البريد الإلكتروني وكلمة المرور');
+                return;
+            }
+            
+            const users = getUsers();
+            const user = users.find(u => u.email === email && u.password === password);
+            
+            if (user) {
+                localStorage.setItem('current_user', JSON.stringify({
+                    id: user.id,
+                    fullName: user.fullName,
+                    email: user.email
+                }));
+                
+                showSuccess('✅ تم تسجيل الدخول بنجاح! جاري تحويلك...');
+                
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1500);
+            } else {
+                const emailExists = users.find(u => u.email === email);
+                if (emailExists) {
+                    showError('❌ كلمة المرور غير صحيحة. يرجى المحاولة مرة أخرى');
+                } else {
+                    showError('❌ البريد الإلكتروني غير مسجل. يرجى إنشاء حساب أولاً');
+                }
+            }
+        });
+        
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMsg');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 4000);
+        }
+        
+        function showSuccess(message) {
+            const successDiv = document.getElementById('successMsg');
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+        }
+            // التحقق من وجود منتج معلق بعد تسجيل الدخول
+    function handlePendingProduct() {
+        const pendingProduct = sessionStorage.getItem('pendingProduct');
+        if (pendingProduct) {
+            sessionStorage.removeItem('pendingProduct');
+            const product = JSON.parse(pendingProduct);
+            
+            // إضافة المنتج إلى السلة
+            let cart = JSON.parse(localStorage.getItem('scout_cart')) || [];
+            const existing = cart.find(item => item.id === product.id);
+            if (existing) {
+                existing.quantity += product.quantity;
+            } else {
+                cart.push({
+                    id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    quantity: product.quantity,
+                    image: product.image || ''
+                });
+            }
+            localStorage.setItem('scout_cart', JSON.stringify(cart));
+            
+            alert(`✅ تم إضافة ${product.name} إلى سلة التسوق بنجاح!`);
+            
+            // التحويل إلى صفحة السلة أو المنتجات
+            if (product.action === 'add_to_cart') {
+                window.location.href = 'Header icon/cart.html';
+            }
+        }
+    }
+    
+    // استدعاء الدالة بعد تسجيل الدخول الناجح
+    // في دالة تسجيل الدخول، بعد تخزين current_user، أضف:
+    // handlePendingProduct();
+    </script>
+</body>
+</html>

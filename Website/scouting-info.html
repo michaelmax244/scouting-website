@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<link rel="icon" type="image/png" href="images/favicon.png">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مغامرة الكشاف - التدريب الكشفي</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+  background: #1e3d0f;
+  min-height: 100vh;
+  color: #222;
+  overflow-x: hidden;
+}
+
+/* SCREENS */
+.screen { display:none; min-height:100vh; }
+.screen.active { display:block; }
+
+/* ======= WELCOME SCREEN ======= */
+#welcome-screen {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background: radial-gradient(ellipse at center, #2a5c14 0%, #1e3d0f 100%);
+}
+
+.scroll-wrapper {
+  width: min(560px, 98vw);
+  animation: unrollScroll 1.1s cubic-bezier(.34,1.56,.64,1) both;
+  transform-origin: top center;
+}
+@keyframes unrollScroll {
+  0%  { transform: scaleY(0) rotateX(20deg); opacity:0; }
+  70% { transform: scaleY(1.04) rotateX(-3deg); opacity:1; }
+  100%{ transform: scaleY(1) rotateX(0); opacity:1; }
+}
+
+.rod {
+  height:36px;
+  background: linear-gradient(90deg,#6b3010,#c07040,#a05030,#6b3010);
+  border-radius:18px;
+  border:3px solid #4a1e08;
+  box-shadow: 0 4px 12px rgba(0,0,0,.5), inset 0 2px 4px rgba(255,255,255,.15);
+}
+.scroll-content {
+  background: linear-gradient(160deg,#f8eccc,#edd890,#f4e4c1);
+  border-left:5px solid #8b4513;
+  border-right:5px solid #8b4513;
+  padding:36px 44px 40px;
+  position:relative;
+  box-shadow:-3px 0 8px rgba(139,69,19,.3), 3px 0 8px rgba(139,69,19,.3);
+}
+.scroll-content::before {
+  content:'';
+  position:absolute; inset:12px;
+  border:2px dashed rgba(139,69,19,.25);
+  pointer-events:none;
+}
+
+.welcome-h1 {
+  text-align:center;
+  font-size:1.8rem;
+  font-weight:900;
+  color:#1e3d0f;
+  line-height:1.35;
+  margin-bottom:6px;
+  text-shadow:1px 1px 0 #d4a040;
+}
+.welcome-sub {
+  text-align:center;
+  color:#7a4a1a;
+  font-size:.95rem;
+  margin-bottom:26px;
+  font-weight:600;
+}
+
+.fgrp { margin-bottom:16px; }
+.fgrp label {
+  display:flex; align-items:center; gap:7px;
+  font-weight:700; color:#1e3d0f;
+  font-size:.9rem; margin-bottom:7px;
+}
+.fgrp input, .fgrp select {
+  width:100%; padding:11px 14px;
+  border:2px solid #8b4513;
+  border-radius:8px;
+  background:rgba(255,255,255,.85);
+  font-size:1rem; color:#111;
+  font-family:inherit; direction:rtl;
+}
+.fgrp input:focus, .fgrp select:focus {
+  outline:none; border-color:#3a7a1a;
+  background:#fff;
+}
+
+.btn-start {
+  width:100%; margin-top:6px;
+  padding:15px;
+  background:linear-gradient(135deg,#1e3d0f,#3a7a1a);
+  color:#fff; border:none; border-radius:12px;
+  font-size:1.15rem; font-weight:800;
+  cursor:pointer;
+  display:flex; align-items:center; justify-content:center; gap:10px;
+}
+.btn-start:hover { transform:translateY(-2px); background:linear-gradient(135deg,#d4a040,#e8c050); color:#1e3d0f; }
+
+/* ======= MAP SCREEN ======= */
+#map-screen { background:radial-gradient(ellipse at center,#2a5c14 0%,#1e3d0f 100%); display:none; flex-direction:column; }
+#map-screen.active { display:flex; }
+
+.map-topbar {
+  background:linear-gradient(135deg,#6b3010,#3a1a04);
+  padding:12px 20px;
+  display:flex; align-items:center; justify-content:space-between;
+  border-bottom:3px solid #f5c518;
+  flex-wrap:wrap;
+  gap:8px;
+}
+.map-topbar-title { color:#f5c518; font-size:1.1rem; font-weight:900; text-shadow:1px 1px 4px rgba(0,0,0,.5); }
+.map-topbar-info  { color:#f4e4c1; font-size:.82rem; font-weight:600; }
+.prog-badge {
+  background:#f5c518; color:#1e3d0f;
+  padding:5px 14px; border-radius:20px;
+  font-weight:900; font-size:.88rem;
+}
+
+.curtain {
+  position:fixed; top:0; bottom:0; width:50%;
+  background:linear-gradient(135deg,#6b3010,#3a1a04);
+  z-index:50; transition:transform 1.3s cubic-bezier(.77,0,.175,1);
+  display:flex; align-items:center; justify-content:center;
+  font-size:60px;
+}
+.curtain-l { left:0; transform-origin:left center; }
+.curtain-r { right:0; transform-origin:right center; }
+.curtain-l.open { transform:translateX(-100%); }
+.curtain-r.open { transform:translateX(100%); }
+
+.map-body { flex:1; overflow:auto; padding:16px; display:flex; align-items:center; justify-content:center; }
+
+.map-stage {
+  position:relative;
+  width:min(860px,100%);
+  height:580px;
+  background:linear-gradient(160deg,#d4a574 0%,#c8956c 50%,#b8855c 100%);
+  border-radius:18px;
+  border:4px solid #6b3010;
+  box-shadow:0 8px 40px rgba(0,0,0,.6);
+  overflow:hidden;
+}
+.map-stage::before {
+  content:'';
+  position:absolute; inset:0;
+  background: repeating-linear-gradient(45deg,rgba(255,255,255,.03) 0,1px,transparent 1px,transparent 8px);
+  border-radius:14px;
+  pointer-events:none;
+}
+.map-stage::after {
+  content:'';
+  position:absolute; inset:10px;
+  border:2px dashed rgba(107,48,16,.35);
+  border-radius:10px;
+  pointer-events:none;
+}
+
+#svgLayer { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
+
+.st {
+  position:absolute;
+  transform:translate(-50%,-50%);
+  text-align:center;
+  cursor:pointer;
+  z-index:5;
+}
+.st-circle {
+  width:60px; height:60px;
+  border-radius:50%;
+  border:4px solid #6b3010;
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.5rem;
+  box-shadow:0 4px 14px rgba(0,0,0,.4);
+  transition:transform .3s;
+  margin:0 auto;
+  background:radial-gradient(circle at 35% 35%,#aaa,#666);
+}
+.st:hover .st-circle { transform:scale(1.12); }
+.st-circle.locked  { filter:grayscale(1) brightness(.8); cursor:not-allowed; }
+.st-circle.current { background:radial-gradient(circle at 35% 35%,#80d050,#3a8a10); border-color:#1e3d0f; animation:stPulse 1.5s ease infinite; }
+.st-circle.done    { background:radial-gradient(circle at 35% 35%,#ffe878,#f5c518); border-color:#b8860b; }
+.st-circle.chest   { background:radial-gradient(circle at 35% 35%,#f8eccc,#c8956c); border-color:#6b3010; font-size:1.9rem; }
+.st-circle.chest.done { background:radial-gradient(circle at 35% 35%,#ffe878,#f5c518); animation:chestGlow 1.5s ease infinite; }
+
+@keyframes stPulse {
+  0%,100%{ box-shadow:0 4px 14px rgba(58,138,16,.4); }
+  50%    { box-shadow:0 4px 30px rgba(58,138,16,.9); }
+}
+@keyframes chestGlow {
+  0%,100%{ box-shadow:0 4px 30px rgba(245,197,24,.7); transform:scale(1); }
+  50%    { box-shadow:0 4px 50px rgba(245,197,24,1); transform:scale(1.06); }
+}
+
+.st-label {
+  margin-top:6px;
+  font-size:.68rem; font-weight:700;
+  color:#f4e4c1;
+  text-shadow:1px 1px 3px rgba(0,0,0,.8);
+  background:rgba(0,0,0,.45);
+  padding:2px 7px; border-radius:8px;
+  white-space:nowrap;
+}
+.st-hint {
+  margin-top:3px;
+  font-size:.65rem; font-weight:700;
+  color:#f5c518;
+  animation:blink 1s ease infinite;
+}
+@keyframes blink { 0%,100%{opacity:1;} 50%{opacity:.25;} }
+
+.pline {
+  stroke:#6b3010;
+  stroke-width:4;
+  stroke-dasharray:10 7;
+  fill:none;
+  opacity:0;
+  transition:opacity .5s, stroke .4s;
+}
+.pline.vis  { opacity:1; }
+.pline.glow { stroke:#f5c518; opacity:1; filter:drop-shadow(0 0 5px #f5c518); animation:dashAnim 1.2s linear infinite; }
+@keyframes dashAnim { from{stroke-dashoffset:34;} to{stroke-dashoffset:0;} }
+
+.compass { position:absolute; bottom:18px; left:18px; width:60px; height:60px; opacity:.7; background:rgba(255,255,255,.15); border-radius:50%; border:2px solid #6b3010; display:flex; align-items:center; justify-content:center; font-size:1.8rem; }
+
+/* LESSON OVERLAY */
+.ov {
+  position:fixed; inset:0;
+  background:rgba(0,0,0,.86);
+  z-index:200;
+  display:none;
+  align-items:flex-start; justify-content:center;
+  padding:16px;
+  overflow-y:auto;
+}
+.ov.active { display:flex; }
+
+.lpanel {
+  background:#f4e4c1;
+  border-radius:18px;
+  width:min(800px,100%);
+  margin:auto;
+  border:4px solid #6b3010;
+  overflow:hidden;
+  animation:popIn .4s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes popIn {
+  from{ transform:scale(.65) translateY(40px); opacity:0; }
+  to  { transform:scale(1)   translateY(0);    opacity:1; }
+}
+
+.lpanel-head {
+  background:linear-gradient(135deg,#1e3d0f,#3a7a1a);
+  padding:18px 22px;
+  display:flex; align-items:center; gap:14px;
+  border-bottom:3px solid #f5c518;
+}
+.lpanel-head-icon { font-size:2.4rem; }
+.lpanel-head-title { color:#fff; font-size:1.2rem; font-weight:800; }
+.lpanel-head-sub   { color:#c8f0a0; font-size:.85rem; margin-top:3px; }
+
+.lpanel-body { padding:22px; }
+
+/* Video player with full controls */
+.vid-container {
+  background:#000;
+  border-radius:12px;
+  overflow:hidden;
+  margin-bottom:16px;
+  position:relative;
+}
+.vid-container video {
+  width:100%;
+  height:auto;
+  display:block;
+  background:#000;
+}
+.video-controls-info {
+  background:linear-gradient(135deg,#1e3d0f,#2a5c14);
+  padding:8px 12px;
+  border-radius:8px;
+  margin-top:8px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:8px;
+  color:#f5c518;
+  font-size:.8rem;
+}
+.speed-control, .quality-control {
+  background:#3a5c2a;
+  border:none;
+  color:#fff;
+  padding:4px 12px;
+  border-radius:20px;
+  cursor:pointer;
+  font-family:inherit;
+  margin-right:8px;
+}
+.speed-control:hover, .quality-control:hover { background:#f5c518; color:#1e3d0f; }
+
+.btn-next-stage, .btn-do-quiz {
+  display:none; width:100%; padding:13px;
+  border:none; border-radius:10px;
+  font-size:1.05rem; font-weight:800;
+  cursor:pointer; margin-top:12px;
+}
+.btn-next-stage { background:linear-gradient(135deg,#e8a010,#f5c518); color:#1e3d0f; }
+.btn-do-quiz { background:linear-gradient(135deg,#1e3d0f,#3a7a1a); color:#fff; }
+.btn-next-stage.show, .btn-do-quiz.show { display:block; }
+.lesson-txt { display:none; background:#fff; border-radius:10px; padding:18px; margin-bottom:16px; border:2px solid #d2b48c; line-height:1.8; font-size:.93rem; }
+.lesson-txt.show { display:block; }
+
+/* QUIZ */
+.qov {
+  position:fixed; inset:0;
+  background:rgba(0,0,0,.92);
+  z-index:300;
+  display:none;
+  align-items:flex-start; justify-content:center;
+  padding:16px; overflow-y:auto;
+}
+.qov.active { display:flex; }
+
+.qpanel {
+  background:#f4e4c1;
+  border-radius:18px;
+  width:min(660px,100%);
+  margin:auto;
+  border:4px solid #f5c518;
+  overflow:hidden;
+}
+.qpanel-head {
+  background:linear-gradient(135deg,#0d2b05,#1e3d0f);
+  padding:18px 22px; text-align:center;
+  border-bottom:3px solid #f5c518;
+}
+.qpanel-head h2 { color:#f5c518; font-size:1.3rem; font-weight:900; }
+.qpanel-head p  { color:#c8f0a0; font-size:.85rem; margin-top:5px; }
+.qpanel-body { padding:22px; }
+
+.qcard {
+  background:#fff; border-radius:10px;
+  padding:18px; margin-bottom:14px;
+  border:2px solid #d2b48c;
+}
+.qcard-q { font-size:.95rem; font-weight:700; color:#111; margin-bottom:12px; }
+.qnum {
+  display:inline-flex; align-items:center; justify-content:center;
+  width:26px; height:26px; border-radius:50%;
+  background:#1e3d0f; color:#fff;
+  font-size:.8rem; font-weight:900;
+  margin-left:8px;
+}
+.opts { display:grid; grid-template-columns:1fr 1fr; gap:9px; }
+.opt-btn {
+  padding:9px 12px;
+  border:2px solid #d2b48c;
+  border-radius:8px;
+  background:#fffaf0;
+  font-family:inherit; font-size:.88rem; font-weight:600;
+  cursor:pointer; text-align:center;
+}
+.opt-btn:hover { border-color:#3a8a10; background:#eaf5e0; }
+.opt-btn.sel { border-color:#3a8a10; background:#d8f0c0; }
+.opt-btn.correct { border-color:#27ae60; background:#d4f5e0; color:#1a6e3c; }
+.opt-btn.wrong   { border-color:#c0392b; background:#fde8e8; color:#c0392b; }
+
+.q-result { padding:12px; border-radius:10px; font-weight:700; text-align:center; margin-bottom:12px; display:none; }
+.q-result.fail { background:#fde8e8; color:#c0392b; display:block; }
+.q-result.pass { background:#d4f5e0; color:#1a6e3c; display:block; }
+
+.btn-submit {
+  width:100%; padding:13px;
+  background:linear-gradient(135deg,#e8a010,#f5c518);
+  color:#1e3d0f; border:none; border-radius:10px;
+  font-size:1.05rem; font-weight:800; cursor:pointer; margin-top:6px;
+}
+
+/* CERTIFICATE */
+#cert-screen {
+  background:radial-gradient(ellipse at center,#2a5c14 0%,#1e3d0f 100%);
+  align-items:center; justify-content:center;
+  flex-direction:column; padding:24px;
+}
+#cert-screen.active { display:flex; }
+
+.confetti-bg { position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden; }
+.cf {
+  position:absolute;
+  border-radius:2px;
+  animation:cfFall linear forwards;
+}
+@keyframes cfFall {
+  0%  {transform:translateY(-80px) rotate(0);   opacity:1;}
+  100%{transform:translateY(110vh) rotate(700deg); opacity:0;}
+}
+
+.cert {
+  position:relative; z-index:1;
+  width:min(720px,98vw);
+  background:linear-gradient(150deg,#fffaf0,#f4e4c1,#fffaf0);
+  border-radius:14px;
+  padding:46px 54px;
+  text-align:center;
+  box-shadow:0 0 0 4px #6b3010, 0 0 0 8px #f5c518, 0 0 0 12px #6b3010;
+  animation:certPop 1s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes certPop {
+  from{transform:scale(.5) rotateY(25deg);opacity:0;}
+  to  {transform:scale(1)  rotateY(0);    opacity:1;}
+}
+.cert-inner {
+  border:3px double #6b3010;
+  padding:28px;
+  border-radius:8px;
+  position:relative;
+}
+.cert-org { font-size:.8rem; font-weight:700; color:#6b3010; letter-spacing:3px; margin-bottom:8px; }
+.cert-embl { font-size:5rem; display:block; margin-bottom:6px; }
+.cert-h1   { font-size:2.3rem; font-weight:900; color:#1e3d0f; text-shadow:1px 1px 0 #d2b48c; margin-bottom:6px; }
+.cert-div  { width:78%; height:3px; background:linear-gradient(90deg,transparent,#f5c518,transparent); margin:14px auto; }
+.cert-pres { font-size:.95rem; color:#6b3010; margin-bottom:5px; }
+.cert-name { font-size:2rem; font-weight:900; color:#1e3d0f; border-bottom:3px solid #f5c518; display:inline-block; padding-bottom:7px; margin-bottom:14px; }
+.cert-desc { font-size:.93rem; color:#222; line-height:1.8; max-width:480px; margin:0 auto 16px; }
+.cert-date { color:#6b3010; font-size:.88rem; margin-bottom:14px; }
+.cert-badges { font-size:1.9rem; margin:12px 0; }
+.cert-sigs  { display:flex; justify-content:space-around; margin-top:18px; padding-top:14px; border-top:1px solid #d2b48c; }
+.sig-block  { text-align:center; }
+.sig-line   { width:110px; height:2px; background:#6b3010; margin:0 auto 5px; }
+.sig-title  { font-size:.76rem; color:#6b3010; font-weight:700; }
+
+.btn-print {
+  margin-top:22px; padding:13px 38px;
+  background:linear-gradient(135deg,#1e3d0f,#3a7a1a);
+  color:#fff; border:none; border-radius:30px;
+  font-size:.98rem; font-weight:800; cursor:pointer;
+}
+.btn-print:hover { transform:translateY(-3px); }
+
+#toast {
+  position:fixed; top:70px; left:50%;
+  transform:translateX(-50%) translateY(-120px);
+  background:#1e3d0f; color:#fff;
+  padding:10px 22px; border-radius:30px;
+  font-weight:700; z-index:999; border:2px solid #f5c518;
+  transition:transform .4s cubic-bezier(.34,1.56,.64,1);
+  white-space:nowrap;
+}
+#toast.show { transform:translateX(-50%) translateY(0); }
+
+@media (max-width:580px){
+  .scroll-content{padding:22px 18px 26px;}
+  .welcome-h1{font-size:1.4rem;}
+  .opts{grid-template-columns:1fr;}
+  .cert{padding:28px 16px;}
+  .cert-inner{padding:14px;}
+  .cert-h1{font-size:1.6rem;}
+  .cert-name{font-size:1.5rem;}
+  .map-stage{height:460px;}
+  .st-circle{width:50px;height:50px;font-size:1.2rem;}
+}
+</style>
+</head>
+<body>
+<!-- WELCOME -->
+<div class="screen active" id="welcome-screen">
+  <div class="scroll-wrapper">
+    <div class="rod"></div>
+    <div class="scroll-content">
+      <div class="scout-logo" style="text-align:center; font-size:3rem;">⚜️</div>
+      <h1 class="welcome-h1">🏕️ مغامرة الكشاف<br>رحلة التعلم الكشفي</h1>
+      <p class="welcome-sub">أكمل بياناتك لتبدأ مغامرتك!</p>
+      <div class="fgrp"><label>👦 اسمك الكريم</label><input type="text" id="inp-name" placeholder="اكتب اسمك هنا" /></div>
+      <div class="fgrp"><label>📱 رقم الهاتف</label><input type="tel" id="inp-phone" placeholder="01XXXXXXXXX" /></div>
+      <div class="fgrp"><label>📚 السنة الدراسية</label><select id="inp-year"><option value="">اختر سنتك الدراسية...</option><option>الصف الأول الابتدائي</option><option>الصف الثاني الابتدائي</option><option>الصف الثالث الابتدائي</option><option>الصف الرابع الابتدائي</option><option>الصف الخامس الابتدائي</option><option>الصف السادس الابتدائي</option><option>الصف الأول الإعدادي</option><option>الصف الثاني الإعدادي</option><option>الصف الثالث الإعدادي</option></select></div>
+      <button class="btn-start" onclick="startAdventure()">🗺️ ابدأ المغامرة!</button>
+    </div>
+    <div class="rod"></div>
+  </div>
+</div>
+
+<!-- MAP -->
+<div class="screen" id="map-screen">
+  <div class="map-topbar">
+    <div class="map-topbar-title">🏕️ خريطة مغامرة الكشاف</div>
+    <div class="map-topbar-info" id="top-info">-</div>
+    <div class="prog-badge" id="prog-badge">⭐ 0/5</div>
+  </div>
+  <div class="map-body">
+    <div class="map-stage" id="mapStage">
+      <svg id="svgLayer" viewBox="0 0 860 580" preserveAspectRatio="none"></svg>
+      <div id="stationsWrap"></div>
+      <div class="compass">🧭</div>
+    </div>
+  </div>
+</div>
+
+<!-- LESSON -->
+<div class="ov" id="lessonOv">
+  <div class="lpanel">
+    <div class="lpanel-head"><span class="lpanel-head-icon" id="l-icon">⭐</span><div><div class="lpanel-head-title" id="l-title">عنوان الدرس</div><div class="lpanel-head-sub" id="l-sub">المحطة</div></div></div>
+    <div class="lpanel-body">
+      <div class="vid-container">
+        <video id="lessonVideo" controls controlsList="nodownload" style="width:100%; height:auto;">
+          <source src="" type="video/mp4">
+          متصفحك لا يدعم تشغيل الفيديو.
+        </video>
+      </div>
+      <div class="video-controls-info">
+        <span>⚡ التحكم بالسرعة والجودة من واجهة الفيديو</span>
+        <div>
+          <button class="speed-control" onclick="changeSpeed(0.75)">🐢 0.75x</button>
+          <button class="speed-control" onclick="changeSpeed(1)">⚡ 1x</button>
+          <button class="speed-control" onclick="changeSpeed(1.25)">🚀 1.25x</button>
+          <button class="speed-control" onclick="changeSpeed(1.5)">🔥 1.5x</button>
+          <button class="speed-control" onclick="changeSpeed(2)">💨 2x</button>
+        </div>
+      </div>
+      <button class="btn-next-stage" id="btnNext" onclick="revealContent()">📖 المرحلة التالية — اقرأ الشرح</button>
+      <div class="lesson-txt" id="lessonTxt"></div>
+      <button class="btn-do-quiz" id="btnQuiz" onclick="openQuiz()">📝 إتمام الاختبار</button>
+    </div>
+  </div>
+</div>
+
+<!-- QUIZ -->
+<div class="qov" id="quizOv">
+  <div class="qpanel">
+    <div class="qpanel-head"><h2 id="q-title">🎯 اختبار المحطة</h2><p id="q-sub">أجب على جميع الأسئلة بشكل صحيح</p></div>
+    <div class="qpanel-body" id="qBody"></div>
+  </div>
+</div>
+
+<!-- CERTIFICATE -->
+<div class="screen" id="cert-screen">
+  <div class="confetti-bg" id="confettiWrap"></div>
+  <div class="cert">
+    <div class="cert-inner">
+      <div class="cert-org">الحركة الكشفية - مهرجان النسور الثالث</div>
+      <span class="cert-embl">⚜️🏕️⚜️</span>
+      <h1 class="cert-h1">شهادة إتمام</h1>
+      <div class="cert-div"></div>
+      <p class="cert-pres">يشهد قادة الكشافة بأن الكشاف المتميز</p>
+      <div class="cert-name" id="c-name">—</div>
+      <p class="cert-desc" id="c-desc">قد أتم بنجاح وتفوق جميع المحطات التدريبية الأربعة، واجتاز الاختبار النهائي بدرجة كاملة، مما يؤكد جدارته واستحقاقه هذه الشهادة الكشفية.</p>
+      <div class="cert-badges">🎖️ ⭐ 🏆 ⭐ 🎖️</div>
+      <p class="cert-date" id="c-date"></p>
+      <div class="cert-sigs"><div class="sig-block"><div class="sig-line"></div><div class="sig-title">مايكل القس دوماديوس</div><div>مبرمج الموقع</div></div><div class="sig-block"><div class="sig-line"></div><div class="sig-title">قادة مجموعة النسور</div></div></div>
+    </div>
+  </div>
+  <button class="btn-print" onclick="window.print()">🖨️ طباعة الشهادة</button>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ============================================================
+// STATIONS DATA - 4 محطات فيديو + 1 محطة اختبار نهائي
+// ============================================================
+const STATIONS = [
+  { id:0, icon:'👑', label:'اللورد بادن باول', videoFile:'Videos/1.mp4',
+    title:'اللورد روبرت بادن باول - مؤسس الحركة الكشفية',
+    content:'<h3>🏕️ اللورد روبرت بادن باول (1857-1941)</h3><p><strong>من هو اللورد روبرت؟</strong><br>هو مؤسس الحركة الكشفية العالمية.</p><p><strong>تاريخ ميلاده:</strong><br>22 فبراير 1857 في لندن.</p><p><strong>والده:</strong><br>كان أول من خط سكة حديد.</p><p><strong>زوجته:</strong><br>هنيريتا سميث.</p><p>أسس الحركة الكشفية عام 1907 في إنجلترا، وشعارها "كن مستعداً".</p>',
+    questions:[
+      {q:"من هو اللورد روبرت بادن باول؟", opts:["مؤسس الحركة الكشفية","أول رئيس وزراء","مكتشف أمريكا","طبيب مشهور"], c:0},
+      {q:"متى ولد اللورد روبرت بادن باول؟", opts:["22/2/1857","1/1/1900","15/7/1865","30/12/1880"], c:0},
+      {q:"ما هو اسم زوجة بادن باول؟", opts:["فيكتوريا","هنيريتا سميث","ماريا","إليزابيث"], c:1},
+      {q:"ماذا كان يعمل والد بادن باول؟", opts:["طبيب","محامي","أول من خط سكة حديد","جندي"], c:2},
+      {q:"أين ولد بادن باول؟", opts:["باريس","لندن","نيويورك","برلين"], c:1}
+    ]},
+  { id:1, icon:'🏅', label:'العلامة الكشفية', videoFile:'Videos/2.mp4',
+    title:'العلامة الكشفية وقانون الكشافة',
+    content:'<h3>⚜️ العلامة الكشفية</h3><p><strong>أول كلمة في الوعد الكشفي:</strong><br>"أعد بشرفي"</p><p><strong>من اختيارات قانون الكشافة:</strong><br>"مخلص"</p><p><strong>العلامة الكشفية تدل على:</strong><br>"الواجب نحو الله"</p><p><strong>الأصبع الأكبر على الأصبع الصغير يعني:</strong><br>"الكبير يعطف على الصغير"</p><p>العلامة الكشفية تتكون من <strong>5 علامات</strong>.</p>',
+    questions:[
+      {q:"ما هي أول كلمة في الوعد الكشفية؟", opts:["أعد بشرفي","أعد بالله","أعد بالوطن","أعد بالقانون"], c:0},
+      {q:"من اختيارات قانون الكشافة؟", opts:["غني","قوي","مخلص","جميل"], c:2},
+      {q:"في العلامة الكشفية، الأصبع الأكبر على الأصبع الصغير يدل على؟", opts:["القوي ينتصر","الكبير يعطف على الصغير","الصغير يطيع","المساواة"], c:1},
+      {q:"كم عدد علامات العلامة الكشفية؟", opts:["3","4","5","6"], c:2},
+      {q:"العلامة الكشفية تدل على؟", opts:["الواجب نحو الله","الواجب نحو المدرسة","الواجب نحو الأسرة","الواجب نحو الحيوان"], c:0}
+    ]},
+  { id:2, icon:'🔥', label:'النيران الكشفية', videoFile:'Videos/3.mp4',
+    title:'أنواع النيران في الكشافة',
+    content:'<h3>🔥 أنواع النيران الكشفية</h3><p><strong>النيران الهرمية:</strong> شكلها زي الهرم وبتتعمل فوق بعض.</p><p><strong>النيران النجمية:</strong> شكلها زي نجمة أو عيدان خارجة من النص.</p><p><strong>النيران المربعة:</strong> بتتعمل على شكل مربع.</p><p><strong>استخدامات النيران:</strong> الطبخ والتدفئة.</p><p><strong>النيران الهرمية:</strong> تكون مرتبة وطبقات.</p>',
+    questions:[
+      {q:"النيران الهرمية شكلها إيه؟", opts:["مستطيل","زي الهرم","دائري","مثلث"], c:1},
+      {q:"النيران النجمية شكلها عامل إزاي؟", opts:["مربع","زي نجمة وعيدان خارجة من النص","دائرة","خط مستقيم"], c:1},
+      {q:"النيران المربعة بتتعمل على شكل إيه؟", opts:["مربع","دائرة","مثلث","هرم"], c:0},
+      {q:"بنستخدم النيران في الكشافة في إيه؟", opts:["الطبخ والتدفئة","الإنارة فقط","الزينة","التخويف"], c:0},
+      {q:"أي نوع من النيران بيكون مرتب وطبقات؟", opts:["النجمية","المربعة","الهرمية","الدائرية"], c:2}
+    ]},
+  { id:3, icon:'🪓', label:'البلطة الكشفية', videoFile:'Videos/4.mp4',
+    title:'استخدامات البلطة وأمانها',
+    content:'<h3>🪓 البلطة الكشفية</h3><p><strong>البلطة تستخدم في:</strong> تقطيع الخشب.</p><p><strong>البلطة هي أداة من أدوات:</strong> الكشاف.</p><p><strong>لا ينفع نستخدم البلطة في:</strong> اللعب مطلقاً.</p><p><strong>لازم نستخدم البلطة:</strong> بحذر شديد.</p><p><strong>بنمسك البلطة من:</strong> المقبض.</p>',
+    questions:[
+      {q:"بماذا تستخدم البلطة الكشفية؟", opts:["تقطيع الخشب","الطبخ","الكتابة","النحت"], c:0},
+      {q:"البلطة دي أداة من أدوات إيه؟", opts:["المطبخ","الحدادة","الكشاف","الزراعة"], c:2},
+      {q:"ينفع نستخدم البلطة في اللعب؟", opts:["نعم","لا","أحياناً","في الحالات الطارئة"], c:1},
+      {q:"لازم نستخدم البلطة بحذر ولا عادي؟", opts:["بحذر","عادي","بإهمال","بسرعة"], c:0},
+      {q:"بنمسك البلطة منين؟", opts:["النصل","السن","المقبض","أي مكان"], c:2}
+    ]},
+  { id:4, icon:'🏆', label:'الاختبار النهائي', isFinal:true,
+    title:'🏆 الاختبار النهائي الشامل (20 سؤالاً)',
+    content:'<h3>🏆 أحسنت أيها الكشاف البطل!</h3><p>وصلت إلى الاختبار النهائي. يجب أن تجيب على جميع الأسئلة العشرين بشكل صحيح للحصول على الشهادة.</p><p>أنت قادر بإذن الله!</p>',
+    questions:[
+      {q:"نستخدم البلطة في إيه؟", opts:["تقطيع الخشب","الطبخ","الغسيل","القراءة"], c:0},
+      {q:"لازم نمسك البلطة منين؟", opts:["النصل","السن","المقبض","الخيط"], c:2},
+      {q:"ينفع نسيب البلطة مرمية؟", opts:["نعم","لا","أحياناً","في العطلات"], c:1},
+      {q:"النيران الهرمية شكلها إيه؟", opts:["زي الهرم","دائري","مربع","مستطيل"], c:0},
+      {q:"النيران النجمية بتكون عاملة إزاي؟", opts:["خطوط متوازية","عيدان خارجة من النص زي النجمة","دائرة مغلقة","مثلث"], c:1},
+      {q:"النيران المربعة بتبقى إزاي؟", opts:["على شكل مربع","على شكل دائرة","على شكل هرم","على شكل نجمة"], c:0},
+      {q:"بنستخدم النار في إيه؟", opts:["الطبخ والتدفئة","الشرب فقط","الأكل فقط","النوم"], c:0},
+      {q:"الزي الكشفي بيدل على إيه؟", opts:["الانتماء للكشافة","الموضة فقط","الجمال","الغنى"], c:0},
+      {q:"بنلبس الزي الكشفي إمتى؟", opts:["في الاجتماعات والرحلات","في النوم فقط","في المطبخ","في الحمام"], c:0},
+      {q:"لازم الزي الكشفي يكون عامل إزاي؟", opts:["نضيف ومرتب","متسخ","ممزق","غير مناسب"], c:0},
+      {q:"لون الزي في الشتاء إيه؟", opts:["أبيض","أحمر","كحلي","أخضر"], c:2},
+      {q:"لون الزي في الصيف إيه؟", opts:["أسود","أبيض","بني","رمادي"], c:1},
+      {q:"لون الشراب (الجورب) الكشفي إيه؟", opts:["أسود","أبيض","أحمر","أزرق"], c:1},
+      {q:"لون الحزام الكشفي إيه؟", opts:["أسود","بني","أبيض","كحلي"], c:2},
+      {q:"الحرق بيحصل بسبب إيه؟", opts:["حرارة أو نار","ماء بارد","هواء","تراب"], c:0},
+      {q:"أول حاجة نعملها مع الحرق؟", opts:["نبعد عن سبب الحرق","نحط ثلج","نضرب","نصرخ"], c:0},
+      {q:"بنغسل الحرق بمية إيه؟", opts:["مية سخنة","مية باردة","مية مالحة","مية سكر"], c:1},
+      {q:"ينفع نحط ثلج على الحرق؟", opts:["نعم","لا","أحياناً","كثيراً"], c:1},
+      {q:"بنغطي الحرق بإيه؟", opts:["بشاش نظيف","بتراب","بصوفة","بمنشفة"], c:0},
+      {q:"ينفع نفتح فقاقيع الحرق؟", opts:["نعم","لا","أحياناً","على حسب"], c:1}
+    ]}
+];
+
+// Positions for 5 stations
+const POS = [{x:8,y:15},{x:25,y:42},{x:42,y:25},{x:60,y:50},{x:85,y:70}];
+
+let student = {};
+let currentSt = 0;
+let doneSt = new Set();
+let activeLesson = 0;
+let currentVideo = null;
+
+function changeSpeed(rate) {
+  if(currentVideo) currentVideo.playbackRate = rate;
+  toast(`⚡ سرعة التشغيل: ${rate}x`);
+}
+
+function toast(msg) { let t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3000); }
+
+function startAdventure() {
+  let name=document.getElementById('inp-name').value.trim();
+  let phone=document.getElementById('inp-phone').value.trim();
+  let year=document.getElementById('inp-year').value;
+  if(!name||!phone||!year){ toast('⚠️ يرجى ملء جميع الحقول!'); return; }
+  student={name,phone,year};
+  document.getElementById('top-info').textContent=`الكشاف: ${name} | ${year}`;
+  document.getElementById('welcome-screen').classList.remove('active');
+  document.getElementById('map-screen').classList.add('active');
+  setTimeout(()=>{ document.getElementById('cL').classList.add('open'); document.getElementById('cR').classList.add('open'); },200);
+  setTimeout(buildMap,900);
+  updateProg();
+}
+
+function updateProg(){ document.getElementById('prog-badge').textContent=`⭐ ${doneSt.size}/5`; }
+
+function buildMap(){
+  let wrap=document.getElementById('stationsWrap');
+  let svg=document.getElementById('svgLayer');
+  wrap.innerHTML=''; svg.innerHTML='';
+  let W=860, H=580;
+  for(let i=0;i<STATIONS.length-1;i++){
+    let a=POS[i], b=POS[i+1];
+    let ax=(a.x/100)*W, ay=(a.y/100)*H, bx=(b.x/100)*W, by=(b.y/100)*H;
+    let mx=(ax+bx)/2, my=Math.min(ay,by)-28;
+    let line=document.createElementNS('http://www.w3.org/2000/svg','path');
+    line.setAttribute('d',`M ${ax} ${ay} Q ${mx} ${my} ${bx} ${by}`);
+    line.setAttribute('class','pline');
+    if(doneSt.has(i)) line.classList.add('vis');
+    if(doneSt.has(i) && i+1===currentSt) line.classList.add('glow');
+    svg.appendChild(line);
+  }
+  STATIONS.forEach((st,i)=>{
+    let p=POS[i];
+    let div=document.createElement('div');
+    div.className='st'; div.id=`st-${i}`;
+    div.style.left=p.x+'%'; div.style.top=p.y+'%';
+    let cls='st-circle locked';
+    if(doneSt.has(i)) cls='st-circle done';
+    else if(i===currentSt) cls='st-circle current';
+    if(st.isFinal) cls+=' chest';
+    let emoji=doneSt.has(i)?'⭐':(st.isFinal?'🏆':st.icon);
+    let hint=(i===currentSt && !doneSt.has(i))?'<div class="st-hint">👆 اضغط هنا</div>':'';
+    div.innerHTML=`<div class="${cls}">${emoji}</div><div class="st-label">${i+1}. ${st.label}</div>${hint}`;
+    div.onclick=()=>{ if(i===currentSt) openLesson(i); else if(!doneSt.has(i)) toast('🔒 أكمل المحطات السابقة أولاً!'); };
+    wrap.appendChild(div);
+  });
+}
+
+function openLesson(idx){
+  activeLesson=idx;
+  let s=STATIONS[idx];
+  document.getElementById('l-icon').textContent=s.icon;
+  document.getElementById('l-title').textContent=s.title;
+  document.getElementById('l-sub').textContent=`المحطة ${idx+1} من 5`;
+  document.getElementById('lessonTxt').innerHTML=s.content;
+  document.getElementById('lessonTxt').classList.remove('show');
+  document.getElementById('btnNext').classList.remove('show');
+  document.getElementById('btnQuiz').classList.remove('show');
+  
+  let video=document.getElementById('lessonVideo');
+  let source=video.querySelector('source');
+  if(s.videoFile){
+    source.src=s.videoFile;
+    video.load();
+    currentVideo=video;
+  }
+  video.style.display='block';
+  
+  // إضافة مستمع لحدث انتهاء الفيديو
+  video.onended = function() {
+    document.getElementById('btnNext').classList.add('show');
+    toast('✅ تم مشاهدة الفيديو! اضغط للمتابعة');
+  };
+  
+  document.getElementById('lessonOv').classList.add('active');
+}
+
+function revealContent(){
+  document.getElementById('lessonTxt').classList.add('show');
+  document.getElementById('btnQuiz').classList.add('show');
+  document.getElementById('btnNext').classList.remove('show');
+}
+
+let selAnswers={};
+
+function openQuiz(){
+  let s=STATIONS[activeLesson];
+  selAnswers={};
+  document.getElementById('q-title').textContent=s.isFinal?'🏆 الاختبار النهائي الشامل (20 سؤالاً)':`🎯 اختبار: ${s.label}`;
+  document.getElementById('q-sub').textContent=s.isFinal?'أجب على جميع الأسئلة العشرين بشكل صحيح':'أجب على الأسئلة الخمسة بشكل صحيح';
+  let body=document.getElementById('qBody');
+  body.innerHTML='';
+  let resDiv=document.createElement('div'); resDiv.className='q-result'; resDiv.id='qRes';
+  body.appendChild(resDiv);
+  s.questions.forEach((q,qi)=>{
+    let card=document.createElement('div'); card.className='qcard';
+    card.innerHTML=`<div class="qcard-q"><span class="qnum">${qi+1}</span> ${q.q}</div><div class="opts" id="opts-${qi}">${q.opts.map((o,oi)=>`<button class="opt-btn" onclick="pickOpt(${qi},${oi},this)">${o}</button>`).join('')}</div>`;
+    body.appendChild(card);
+  });
+  let sub=document.createElement('button'); sub.className='btn-submit'; sub.textContent='✅ تحقق من إجاباتي'; sub.onclick=checkQuiz;
+  body.appendChild(sub);
+  document.getElementById('quizOv').classList.add('active');
+}
+
+function pickOpt(qi,oi,el){
+  document.querySelectorAll(`#opts-${qi} .opt-btn`).forEach(b=>b.classList.remove('sel'));
+  el.classList.add('sel');
+  selAnswers[qi]=oi;
+}
+
+function checkQuiz(){
+  let s=STATIONS[activeLesson];
+  let res=document.getElementById('qRes');
+  let allSelected=true;
+  s.questions.forEach((_,qi)=>{ if(!document.querySelector(`#opts-${qi} .opt-btn.sel`)) allSelected=false; });
+  if(!allSelected){ res.textContent='⚠️ أجب على جميع الأسئلة أولاً!'; res.className='q-result fail'; return; }
+  let allOk=true;
+  s.questions.forEach((q,qi)=>{
+    let btns=document.querySelectorAll(`#opts-${qi} .opt-btn`);
+    if(selAnswers[qi]!==q.c){
+      allOk=false;
+      btns[selAnswers[qi]]?.classList.add('wrong');
+      btns[q.c]?.classList.add('correct');
+    } else { btns[selAnswers[qi]]?.classList.add('correct'); }
+  });
+  if(!allOk){
+    res.textContent='❌ بعض إجاباتك خاطئة! راجع الإجابات وأعد المحاولة.';
+    res.className='q-result fail';
+    document.querySelector('.btn-submit').textContent='🔄 أعد المحاولة';
+  } else {
+    res.textContent='🎉 ممتاز! جميع إجاباتك صحيحة!';
+    res.className='q-result pass';
+    document.querySelector('.btn-submit').style.display='none';
+    setTimeout(()=>completeStation(activeLesson),1500);
+  }
+}
+
+function completeStation(idx){
+  doneSt.add(idx);
+  document.getElementById('quizOv').classList.remove('active');
+  document.getElementById('lessonOv').classList.remove('active');
+  if(currentVideo) currentVideo.pause();
+  updateProg();
+  if(idx===4){
+    showCert();
+    return;
+  }
+  currentSt=idx+1;
+  buildMap();
+  toast(`⭐ أحسنت! المحطة ${idx+1} مكتملة!`);
+}
+
+function showCert(){
+  document.getElementById('c-name').textContent=student.name;
+  let now=new Date();
+  let months=['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+  document.getElementById('c-date').textContent=`📅 ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}م`;
+  document.getElementById('map-screen').classList.remove('active');
+  document.getElementById('cert-screen').classList.add('active');
+  spawnConfetti();
+  toast('🏆 تهانينا! أنت جامد جداً! 🎉 لقد أتممت الاختبار بنجاح - برجاء انتظار الشهادة، سيتم تبليغك بموعد التكريم');
+}
+
+function spawnConfetti(){
+  let wrap=document.getElementById('confettiWrap');
+  wrap.innerHTML='';
+  let cols=['#f5c518','#e74c3c','#27ae60','#3498db','#9b59b6','#e67e22','#fff'];
+  for(let i=0;i<150;i++){
+    let el=document.createElement('div');
+    el.className='cf';
+    let size=6+Math.random()*10;
+    el.style.cssText=`left:${Math.random()*100}%;width:${size}px;height:${size}px;background:${cols[Math.floor(Math.random()*cols.length)]};border-radius:${Math.random()>.5?'50%':'3px'};animation-duration:${2.5+Math.random()*4}s;animation-delay:${Math.random()*3}s;`;
+    wrap.appendChild(el);
+  }
+}
+
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ document.getElementById('lessonOv').classList.remove('active'); document.getElementById('quizOv').classList.remove('active'); if(currentVideo) currentVideo.pause(); } });
+window.addEventListener('resize',()=>{ if(document.getElementById('map-screen').classList.contains('active')) buildMap(); });
+</script>
+</body>
+</html>
